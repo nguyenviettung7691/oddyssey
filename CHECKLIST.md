@@ -1,4 +1,0 @@
-- The application displays displays one question at a time
-- The user can select on answer choice and submit it
-- A "Correct" or "Incorrect" message is displayed on submit
-- The final score is displayed after the last question
