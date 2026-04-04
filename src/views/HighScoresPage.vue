@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header>
       <ion-toolbar color="dark">
-        <ion-title>High Scores</ion-title>
+        <ion-title>{{ $t('highScores.title') }}</ion-title>
         <ion-buttons slot="start">
           <ion-button fill="clear" router-link="/home">
             <ion-icon slot="icon-only" :icon="arrowBackOutline" />
@@ -14,7 +14,7 @@
     <ion-content class="scores-content">
       <ion-segment v-model="selectedTheme" mode="md" class="theme-segment">
         <ion-segment-button value="all">
-          <ion-label>All Themes</ion-label>
+          <ion-label>{{ $t('highScores.allThemes') }}</ion-label>
         </ion-segment-button>
         <ion-segment-button v-for="theme in coreThemes" :key="theme.id" :value="theme.id">
           <ion-label>{{ theme.label }}</ion-label>
@@ -36,7 +36,7 @@
           <ion-badge slot="end" color="primary">{{ entry.score }}</ion-badge>
         </ion-item>
         <ion-item v-if="!highScores.length">
-          <ion-label>No runs logged for this theme yet. Be the first!</ion-label>
+          <ion-label>{{ $t('highScores.noRuns') }}</ion-label>
         </ion-item>
       </ion-list>
     </ion-content>
@@ -63,20 +63,22 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/vue';
+import { useI18n } from 'vue-i18n';
 import { arrowBackOutline } from 'ionicons/icons';
 import { coreThemes } from '@/data/themes';
 import { listHighScores } from '@/services/storageService';
 import type { HighScoreEntry } from '@/types/game';
 
+const { t } = useI18n();
 const selectedTheme = ref<'all' | string>('all');
 const highScores = ref<HighScoreEntry[]>([]);
 
 const activeThemeLabel = computed(() => {
   if (selectedTheme.value === 'all') {
-    return 'Across All Themes';
+    return t('highScores.acrossAll');
   }
   const theme = coreThemes.find((item) => item.id === selectedTheme.value);
-  return theme?.label ?? 'Unknown Theme';
+  return theme?.label ?? t('highScores.unknownTheme');
 });
 
 function refreshLeaderboard(): void {
@@ -94,7 +96,7 @@ onMounted(() => {
 function formatDate(input: string): string {
   const date = new Date(input);
   if (Number.isNaN(date.getTime())) {
-    return 'Unknown time';
+    return t('highScores.unknownTime');
   }
   return date.toLocaleString();
 }

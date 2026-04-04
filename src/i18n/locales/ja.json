@@ -1,0 +1,92 @@
+{
+  "app": {
+    "title": "Oddyssey"
+  },
+  "home": {
+    "headline": "仲間はずれを見つけよう。",
+    "subtitle": "60秒のテーマ別トリビアに挑戦。連続正解を重ね、パワーカードを駆使して、時計を止めるな。",
+    "welcomeBack": "おかえりなさい、{name}",
+    "selectTheme": "テーマを選んでください",
+    "startButton": "Oddysseyを始める",
+    "powerCards": {
+      "title": "パワーカード",
+      "subtitle": "各試合に4つの使い切りブーストが付きます。",
+      "swap": "新しい問題に即座に切り替え。",
+      "swapLabel": "問題交換：",
+      "removeCorrect": "正解の選択肢を1つ除外。",
+      "removeCorrectLabel": "正解除外：",
+      "doubleScore": "自信のある回答でポイント2倍。",
+      "doubleScoreLabel": "ダブルスコア：",
+      "timeKeep": "ミスからタイマーを守る。",
+      "timeKeepLabel": "タイムキープ："
+    }
+  },
+  "themePicker": {
+    "comingSoon": "近日公開"
+  },
+  "game": {
+    "skipButton": "スキップ (-1秒)",
+    "footerNote": "不正解は3秒のペナルティ。集中して。",
+    "errorTitle": "問題がなくなりました。",
+    "backToThemes": "テーマに戻る"
+  },
+  "hud": {
+    "timeLeft": "残り時間",
+    "score": "スコア",
+    "question": "問題"
+  },
+  "powerCard": {
+    "swap": "交換",
+    "removeCorrect": "正解除外",
+    "doubleScore": "ダブル",
+    "timeKeep": "時間保護",
+    "remaining": "残り{count}"
+  },
+  "results": {
+    "title": "結果",
+    "points": "{score} ポイント",
+    "summary": "1分間で{count}問をクリアしました。",
+    "personalBest": "自己ベスト更新！",
+    "themeBest": "このテーマのトップスコア！",
+    "signInPrompt": "Googleでログインしてスコアを保存し、リーダーボードで競争しましょう。",
+    "questionReview": "問題の振り返り",
+    "oddOneOut": "仲間はずれ：",
+    "youPicked": "あなたの回答: {option}",
+    "youSkipped": "スキップしました",
+    "playAgain": "もう一度プレイ",
+    "chooseTheme": "テーマを選ぶ",
+    "noSession": "セッションが見つかりません",
+    "noSessionHint": "新しいゲームを始めて結果を確認しましょう。",
+    "backToStart": "スタートに戻る",
+    "unknownTheme": "不明なテーマ"
+  },
+  "highScores": {
+    "title": "ハイスコア",
+    "allThemes": "全テーマ",
+    "acrossAll": "全テーマ合計",
+    "unknownTheme": "不明なテーマ",
+    "noRuns": "このテーマにはまだ記録がありません。最初の一人になろう！",
+    "unknownTime": "不明な時間"
+  },
+  "profile": {
+    "title": "プロフィール",
+    "signedInVia": "{provider}でログイン中",
+    "guestHint": "ゲストとしてプレイまたはGoogleを連携",
+    "signInGoogle": "Googleでログイン",
+    "signOut": "ログアウト",
+    "guestAlias": "ゲスト名",
+    "guestPlaceholder": "Oddysseyエクスプローラー",
+    "useGuest": "ゲストプロフィールを使用",
+    "googleNotConfigured": "Google Sign-Inを有効にするにはVITE_GOOGLE_CLIENT_IDを設定してください。",
+    "recentRuns": "最近のプレイ記録",
+    "noRuns": "まだ記録がありません。ゲームを完了して記録を確認しましょう。",
+    "runSummary": "{theme} · {score} ポイント",
+    "unknownTime": "不明な時間",
+    "language": "言語"
+  },
+  "outcome": {
+    "correct": "正解",
+    "incorrect": "不正解",
+    "skipped": "スキップ"
+  }
+}

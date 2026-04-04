@@ -4,6 +4,7 @@ import { createPinia } from 'pinia';
 
 import App from './App.vue';
 import router from './router';
+import i18n from './i18n';
 import { useUserStore } from '@/store/userStore';
 
 /* Core CSS required for Ionic components to work properly */
@@ -33,6 +34,7 @@ const pinia = createPinia();
 const app = createApp(App)
   .use(IonicVue)
   .use(pinia)
+  .use(i18n)
   .use(router);
 
 const userStore = useUserStore(pinia);

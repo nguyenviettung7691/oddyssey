@@ -12,14 +12,15 @@
     >
       <ion-icon slot="start" :icon="iconMap[card.type]" />
       <ion-label>
-        <div class="card-title">{{ titleMap[card.type] }}</div>
-        <small>{{ card.remaining }} left</small>
+        <div class="card-title">{{ t(titleKeyMap[card.type]) }}</div>
+        <small>{{ t('powerCard.remaining', { count: card.remaining }) }}</small>
       </ion-label>
     </ion-button>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
 import { IonButton, IonIcon, IonLabel } from '@ionic/vue';
 import {
   colorWandOutline,
@@ -38,6 +39,8 @@ const emit = defineEmits<{
   use: [type: PowerCardType];
 }>();
 
+const { t } = useI18n();
+
 const iconMap: Record<PowerCardType, string> = {
   swap: swapHorizontalOutline,
   'remove-correct': constructOutline,
@@ -45,11 +48,11 @@ const iconMap: Record<PowerCardType, string> = {
   'time-keep': timeOutline,
 };
 
-const titleMap: Record<PowerCardType, string> = {
-  swap: 'Swap',
-  'remove-correct': 'Remove Correct',
-  'double-score': 'Double Score',
-  'time-keep': 'Time Keep',
+const titleKeyMap: Record<PowerCardType, string> = {
+  swap: 'powerCard.swap',
+  'remove-correct': 'powerCard.removeCorrect',
+  'double-score': 'powerCard.doubleScore',
+  'time-keep': 'powerCard.timeKeep',
 };
 </script>
 

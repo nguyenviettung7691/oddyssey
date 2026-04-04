@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header>
       <ion-toolbar color="dark">
-        <ion-title>Oddyssey</ion-title>
+        <ion-title>{{ $t('app.title') }}</ion-title>
         <ion-buttons slot="end">
           <ion-button router-link="/highscores" fill="clear">
             <ion-icon slot="icon-only" :icon="trophyOutline" />
@@ -16,18 +16,16 @@
 
     <ion-content class="home-content">
       <section class="hero">
-        <h1>Find the Odd One Out.</h1>
-        <p>
-          Blitz through 60 seconds of themed trivia. Climb the streaks, trigger power cards, and keep the clock alive.
-        </p>
+        <h1>{{ $t('home.headline') }}</h1>
+        <p>{{ $t('home.subtitle') }}</p>
         <ion-chip color="primary" v-if="userStore.isAuthenticated">
           <ion-icon :icon="sparklesOutline" />
-          <ion-label>Welcome back, {{ userStore.displayName }}</ion-label>
+          <ion-label>{{ $t('home.welcomeBack', { name: userStore.displayName }) }}</ion-label>
         </ion-chip>
       </section>
 
       <section>
-        <h2>Select your theme</h2>
+        <h2>{{ $t('home.selectTheme') }}</h2>
         <ThemePicker
           v-model="selectedTheme"
           :themes="coreThemes"
@@ -37,22 +35,22 @@
 
       <ion-card class="power-card">
         <ion-card-header>
-          <ion-card-title>Power Cards</ion-card-title>
-          <ion-card-subtitle>Each match comes with four single-use boosts.</ion-card-subtitle>
+          <ion-card-title>{{ $t('home.powerCards.title') }}</ion-card-title>
+          <ion-card-subtitle>{{ $t('home.powerCards.subtitle') }}</ion-card-subtitle>
         </ion-card-header>
         <ion-card-content>
           <ul>
-            <li><strong>Swap Question:</strong> Roll a fresh challenge instantly.</li>
-            <li><strong>Remove Correct:</strong> Trim one safe option.</li>
-            <li><strong>Double Score:</strong> Bank double points on a confident call.</li>
-            <li><strong>Time Keep:</strong> Protect the clock from a misfire.</li>
+            <li><strong>{{ $t('home.powerCards.swapLabel') }}</strong> {{ $t('home.powerCards.swap') }}</li>
+            <li><strong>{{ $t('home.powerCards.removeCorrectLabel') }}</strong> {{ $t('home.powerCards.removeCorrect') }}</li>
+            <li><strong>{{ $t('home.powerCards.doubleScoreLabel') }}</strong> {{ $t('home.powerCards.doubleScore') }}</li>
+            <li><strong>{{ $t('home.powerCards.timeKeepLabel') }}</strong> {{ $t('home.powerCards.timeKeep') }}</li>
           </ul>
         </ion-card-content>
       </ion-card>
 
       <ion-footer class="start-footer">
         <ion-button expand="block" size="large" :disabled="!selectedTheme" @click="begin">
-          Start Oddyssey
+          {{ $t('home.startButton') }}
         </ion-button>
       </ion-footer>
     </ion-content>

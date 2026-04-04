@@ -30,7 +30,7 @@
 
     <ion-row v-if="upcomingThemes.length">
       <ion-col size="12">
-        <ion-text color="medium" class="upcoming-label">Coming Soon</ion-text>
+        <ion-text color="medium" class="upcoming-label">{{ $t('themePicker.comingSoon') }}</ion-text>
       </ion-col>
       <ion-col
         v-for="theme in upcomingThemes"

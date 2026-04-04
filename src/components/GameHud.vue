@@ -3,15 +3,15 @@
     <ion-card-content>
       <div class="hud-row">
         <div class="hud-item">
-          <ion-text color="light" class="hud-label">Time Left</ion-text>
+          <ion-text color="light" class="hud-label">{{ $t('hud.timeLeft') }}</ion-text>
           <ion-text class="hud-value" :style="{ color: accentColor }">{{ formattedTime }}</ion-text>
         </div>
         <div class="hud-item">
-          <ion-text color="light" class="hud-label">Score</ion-text>
+          <ion-text color="light" class="hud-label">{{ $t('hud.score') }}</ion-text>
           <ion-text class="hud-value">{{ score }}</ion-text>
         </div>
         <div class="hud-item">
-          <ion-text color="light" class="hud-label">Question</ion-text>
+          <ion-text color="light" class="hud-label">{{ $t('hud.question') }}</ion-text>
           <ion-text class="hud-value">{{ questionIndex }}</ion-text>
         </div>
       </div>

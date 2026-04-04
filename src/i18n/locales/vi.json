@@ -1,0 +1,92 @@
+{
+  "app": {
+    "title": "Oddyssey"
+  },
+  "home": {
+    "headline": "Tìm Ra Phần Tử Khác Biệt.",
+    "subtitle": "Chơi nhanh 60 giây câu đố theo chủ đề. Leo chuỗi thắng, dùng thẻ năng lực, và giữ đồng hồ sống.",
+    "welcomeBack": "Chào mừng trở lại, {name}",
+    "selectTheme": "Chọn chủ đề của bạn",
+    "startButton": "Bắt Đầu Oddyssey",
+    "powerCards": {
+      "title": "Thẻ Năng Lực",
+      "subtitle": "Mỗi trận đi kèm bốn lượt tăng sức mạnh dùng một lần.",
+      "swap": "Đổi sang câu hỏi mới ngay lập tức.",
+      "swapLabel": "Đổi Câu Hỏi:",
+      "removeCorrect": "Loại bỏ một lựa chọn an toàn.",
+      "removeCorrectLabel": "Loại Đáp Án Đúng:",
+      "doubleScore": "Nhân đôi điểm cho lượt trả lời tự tin.",
+      "doubleScoreLabel": "Nhân Đôi Điểm:",
+      "timeKeep": "Bảo vệ đồng hồ khỏi sai lầm.",
+      "timeKeepLabel": "Giữ Thời Gian:"
+    }
+  },
+  "themePicker": {
+    "comingSoon": "Sắp Ra Mắt"
+  },
+  "game": {
+    "skipButton": "Bỏ qua (-1 giây)",
+    "footerNote": "Trả lời sai mất 3 giây. Tập trung nhé.",
+    "errorTitle": "Đã hết câu hỏi.",
+    "backToThemes": "Quay lại chủ đề"
+  },
+  "hud": {
+    "timeLeft": "Thời Gian",
+    "score": "Điểm",
+    "question": "Câu Hỏi"
+  },
+  "powerCard": {
+    "swap": "Đổi",
+    "removeCorrect": "Loại Đáp Án",
+    "doubleScore": "Nhân Đôi Điểm",
+    "timeKeep": "Giữ Thời Gian",
+    "remaining": "Còn {count}"
+  },
+  "results": {
+    "title": "Kết Quả",
+    "points": "{score} điểm",
+    "summary": "Bạn đã hoàn thành {count} câu hỏi trong một phút.",
+    "personalBest": "Kỷ lục cá nhân mới!",
+    "themeBest": "Điểm cao nhất cho chủ đề này!",
+    "signInPrompt": "Đăng nhập với Google để lưu kết quả và thi đấu trên bảng xếp hạng.",
+    "questionReview": "Xem Lại Câu Hỏi",
+    "oddOneOut": "Phần tử khác biệt:",
+    "youPicked": "Bạn chọn: {option}",
+    "youSkipped": "Bạn đã bỏ qua",
+    "playAgain": "Chơi lại",
+    "chooseTheme": "Chọn chủ đề",
+    "noSession": "Không tìm thấy phiên",
+    "noSessionHint": "Bắt đầu trận mới để xem kết quả.",
+    "backToStart": "Quay về trang chủ",
+    "unknownTheme": "Chủ đề không xác định"
+  },
+  "highScores": {
+    "title": "Điểm Cao",
+    "allThemes": "Tất Cả Chủ Đề",
+    "acrossAll": "Tất Cả Các Chủ Đề",
+    "unknownTheme": "Chủ đề không xác định",
+    "noRuns": "Chưa có lượt chơi nào cho chủ đề này. Hãy là người đầu tiên!",
+    "unknownTime": "Thời gian không xác định"
+  },
+  "profile": {
+    "title": "Hồ Sơ",
+    "signedInVia": "Đăng nhập qua {provider}",
+    "guestHint": "Chơi với tư cách khách hoặc liên kết Google",
+    "signInGoogle": "Đăng nhập với Google",
+    "signOut": "Đăng xuất",
+    "guestAlias": "Bí danh khách",
+    "guestPlaceholder": "Nhà Thám Hiểm Oddyssey",
+    "useGuest": "Dùng hồ sơ khách",
+    "googleNotConfigured": "Đặt VITE_GOOGLE_CLIENT_ID để bật đăng nhập Google.",
+    "recentRuns": "Lượt chơi gần đây",
+    "noRuns": "Chưa có lượt chơi. Hoàn thành trận để xem tại đây.",
+    "runSummary": "{theme} · {score} điểm",
+    "unknownTime": "Thời gian không xác định",
+    "language": "Ngôn ngữ"
+  },
+  "outcome": {
+    "correct": "đúng",
+    "incorrect": "sai",
+    "skipped": "bỏ qua"
+  }
+}
