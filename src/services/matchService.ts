@@ -11,7 +11,6 @@ import {
   limit as firestoreLimit,
   onSnapshot,
   updateDoc,
-  serverTimestamp,
   type Unsubscribe,
 } from 'firebase/firestore';
 import { getFirebaseDb, isFirebaseConfigured } from '@/services/firebaseService';
@@ -228,7 +227,7 @@ export async function setPlayerReady(matchId: string, playerId: string): Promise
     }
 
     const match = matchSnap.data() as Omit<Match, 'id'>;
-    const updates: Record<string, unknown> = {};
+    const updates: Record<string, string | boolean> = {};
 
     if (playerId === match.player1Id) {
       updates.player1Ready = true;
@@ -331,7 +330,7 @@ export async function finishMatch(
     }
 
     const match = matchSnap.data() as Omit<Match, 'id'>;
-    const updates: Record<string, unknown> = {};
+    const updates: Record<string, string | number | null> = {};
 
     if (playerId === match.player1Id) {
       updates.player1Score = finalScore;

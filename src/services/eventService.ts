@@ -251,7 +251,7 @@ export async function submitEventScore(
 
     if (standingSnap.exists()) {
       const existing = standingSnap.data() as EventStanding;
-      const updates: Record<string, unknown> = {
+      const updates: Record<string, string | number> = {
         gamesPlayed: (existing.gamesPlayed ?? 0) + 1,
         totalScore: (existing.totalScore ?? 0) + record.score,
         lastPlayedAt: new Date().toISOString(),

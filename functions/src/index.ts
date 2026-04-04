@@ -184,7 +184,7 @@ export const expireStaleChallenges = onSchedule("every 1 hours", async () => {
 
 // --- Weekly Events Cloud Functions ---
 
-const WEEKLY_THEMES = [
+const ALL_THEMES = [
   { id: "football", label: "World Football" },
   { id: "anime", label: "Anime Universe" },
   { id: "science", label: "Science & Discovery" },
@@ -201,8 +201,8 @@ const WEEKLY_THEMES = [
 export const createWeeklyEvent = onSchedule("every monday 00:00", async () => {
   const now = new Date();
   const weekNumber = getWeekNumber(now);
-  const themeIndex = weekNumber % WEEKLY_THEMES.length;
-  const theme = WEEKLY_THEMES[themeIndex];
+  const themeIndex = weekNumber % ALL_THEMES.length;
+  const theme = ALL_THEMES[themeIndex];
 
   const startTime = now.toISOString();
   const endTime = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString();
@@ -375,7 +375,7 @@ export const onMatchmakingEntryCreated = onDocumentCreated(
     }
 
     const opponentData = opponent.data()!;
-    const themeLabel = WEEKLY_THEMES.find((t) => t.id === data.themeId)?.label ?? data.themeId;
+    const themeLabel = ALL_THEMES.find((t) => t.id === data.themeId)?.label ?? data.themeId;
 
     // Create a match
     const matchRef = db.collection("matches").doc();

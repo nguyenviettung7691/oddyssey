@@ -128,10 +128,6 @@ function begin(): void {
   router.push({ name: 'Game', query: { theme: selectedTheme.value } });
 }
 
-function goToEvents(): void {
-  router.push({ name: 'Events' });
-}
-
 function goToMatchmaking(): void {
   router.push({ name: 'Matchmaking' });
 }

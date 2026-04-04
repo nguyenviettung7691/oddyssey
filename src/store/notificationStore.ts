@@ -13,13 +13,14 @@ export const useNotificationStore = defineStore('notification', {
     pendingFriendRequests: 0,
     pendingChallenges: 0,
     activeChallenges: 0,
-    activeMatches: 0,
+    activeMatchesP1: 0,
+    activeMatchesP2: 0,
     activeEvents: 0,
     _unsubscribers: [] as Unsubscribe[],
   }),
   getters: {
     totalBadgeCount(state): number {
-      return state.pendingFriendRequests + state.pendingChallenges + state.activeChallenges + state.activeMatches;
+      return state.pendingFriendRequests + state.pendingChallenges + state.activeChallenges + state.activeMatchesP1 + state.activeMatchesP2;
     },
     friendsBadge(state): number {
       return state.pendingFriendRequests;
@@ -28,7 +29,7 @@ export const useNotificationStore = defineStore('notification', {
       return state.pendingChallenges + state.activeChallenges;
     },
     matchesBadge(state): number {
-      return state.activeMatches;
+      return state.activeMatchesP1 + state.activeMatchesP2;
     },
     eventsBadge(state): number {
       return state.activeEvents;
@@ -108,7 +109,7 @@ export const useNotificationStore = defineStore('notification', {
         where('status', 'in', ['waiting', 'ready']),
       );
       const unsubMatchesP1 = onSnapshot(matchesAsP1, (snapshot) => {
-        this.activeMatches = snapshot.size;
+        this.activeMatchesP1 = snapshot.size;
       }, (error) => {
         console.warn('[Oddyssey] Matches P1 listener error', error);
       });
@@ -120,8 +121,7 @@ export const useNotificationStore = defineStore('notification', {
         where('status', 'in', ['waiting', 'ready']),
       );
       const unsubMatchesP2 = onSnapshot(matchesAsP2, (snapshot) => {
-        // Add to existing count from P1 query
-        this.activeMatches += snapshot.size;
+        this.activeMatchesP2 = snapshot.size;
       }, (error) => {
         console.warn('[Oddyssey] Matches P2 listener error', error);
       });
@@ -146,7 +146,8 @@ export const useNotificationStore = defineStore('notification', {
       this.pendingFriendRequests = 0;
       this.pendingChallenges = 0;
       this.activeChallenges = 0;
-      this.activeMatches = 0;
+      this.activeMatchesP1 = 0;
+      this.activeMatchesP2 = 0;
       this.activeEvents = 0;
     },
   },

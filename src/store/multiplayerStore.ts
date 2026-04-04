@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import type { Match, MatchmakingEntry, MatchMode, PlayerMatchState } from '@/types/game';
+import type { Match, MatchMode, PlayerMatchState } from '@/types/game';
 import {
   joinMatchmaking,
   cancelMatchmaking,
@@ -84,7 +84,7 @@ export const useMultiplayerStore = defineStore('multiplayer', {
           if (entry.status === 'matched' && entry.matchId) {
             this.isSearching = false;
             this.matchId = entry.matchId;
-            this.subscribeToMatchUpdates(entry.matchId);
+            this.subscribeToMatchUpdates(entry.matchId, userId);
             this.unsubscribeMatchmaking();
           }
         });
@@ -101,12 +101,12 @@ export const useMultiplayerStore = defineStore('multiplayer', {
       this.matchmakingEntryId = null;
       this.unsubscribeMatchmaking();
     },
-    subscribeToMatchUpdates(matchId: string): void {
+    subscribeToMatchUpdates(matchId: string, userId?: string): void {
       this.unsubscribeMatch();
       this._matchUnsub = subscribeToMatch(matchId, (match) => {
         this.match = match;
-        if (match?.status === 'finished') {
-          this.determineResult();
+        if (match?.status === 'finished' && userId) {
+          this.determineResult(userId);
         }
       });
     },
@@ -125,29 +125,23 @@ export const useMultiplayerStore = defineStore('multiplayer', {
     async submitFinalScore(matchId: string, playerId: string, finalScore: number): Promise<void> {
       await finishMatch(matchId, playerId, finalScore);
     },
-    determineResult(): void {
+    determineResult(userId: string): void {
       if (!this.match) return;
-
-      const userId = this.getCurrentUserId();
-      if (!userId) return;
 
       if (this.match.mode === 'cooperative') {
         this.matchResult = 'win'; // Coop always "wins" together
         return;
       }
 
-      if (this.match.winnerId === null) {
+      if (this.match.winnerId === null &&
+          this.match.player1Score !== null &&
+          this.match.player2Score !== null) {
         this.matchResult = 'draw';
       } else if (this.match.winnerId === userId) {
         this.matchResult = 'win';
-      } else {
+      } else if (this.match.winnerId !== null) {
         this.matchResult = 'loss';
       }
-    },
-    getCurrentUserId(): string | null {
-      // Will be called with userId from component context
-      // For now return from match data
-      return null;
     },
     getOpponentId(userId: string): string | null {
       if (!this.match) return null;
