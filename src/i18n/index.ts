@@ -26,6 +26,10 @@ export function persistLocale(locale: string): void {
   }
 }
 
+export function getCurrentLocale(): string {
+  return String(i18n.global.locale.value ?? 'en');
+}
+
 export const supportedLocales = [
   { code: 'en', label: 'English' },
   { code: 'vi', label: 'Tiếng Việt' },
