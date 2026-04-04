@@ -164,14 +164,24 @@ Open the served URL in a modern browser (Chrome, Edge, Safari, Firefox). Ionic a
 
 ## Environment Configuration
 
-Create a `.env` (or `.env.local`) in the project root to expose runtime secrets. The only required key today is the Google Web Client ID:
+Create a `.env` (or `.env.local`) in the project root to expose runtime secrets. See `.env.example` for the full list.
 
 ```
 VITE_GOOGLE_CLIENT_ID=<your-google-oauth-client-id>
+VITE_GENKIT_API_URL=<your-genkit-flow-endpoint-url>
 ```
+
+### Google Sign-In (`VITE_GOOGLE_CLIENT_ID`)
 
 - When omitted, the app gracefully falls back to guest mode; sign-in buttons remain but surface an inline warning.
 - The Google Identity Services prompt anchor lives at `src/App.vue` (`#oddyssey-google-signin`), so popup UX is already configured.
+
+### Genkit AI Questions (`VITE_GENKIT_API_URL`)
+
+- Point this to a deployed Genkit flow endpoint (e.g., on Cloud Functions for Firebase or Cloud Run) that accepts a JSON body `{ "data": { "prompt": "..." } }` and returns a JSON response with `{ "result": "{ \"prompt\": \"...\", \"options\": [...] }" }`.
+- When omitted, the app uses the curated fallback question bank (~45 questions across 3 themes).
+- When configured, the service sends the AI prompt with theme context, difficulty, and exclusion lists, then validates the response before presenting it as a game question.
+- If the Genkit endpoint is unreachable, times out (10 s), or returns invalid data, the app automatically falls back to the curated question bank — no gameplay interruption.
 
 For native builds you'll also need to configure platform-specific credentials (iOS URL schemes, Android SHA fingerprints); these steps are outside the current scope but the Capacitor bridge is ready.
 
@@ -211,7 +221,7 @@ The store also maintains `activeModifiers`, `powerCards` inventory, and `current
 
 | Service / Data File | Purpose |
 | ------------------- | ------- |
-| `services/genkitService.ts` | Builds the exact prompt Genkit needs (including exclusion lists for seen questions/options) and logs the outgoing request. Currently returns `null` so the fallback bank is used; plug in the actual API call when ready. |
+| `services/genkitService.ts` | Builds the exact prompt Genkit needs (including exclusion lists for seen questions/options), calls the deployed Genkit flow endpoint via `fetch()`, validates and parses the AI response, and converts it into a `GameQuestion`. Includes a 10-second timeout, one automatic retry on transient failures, and graceful fallback when the API URL is not configured or the endpoint is unreachable. |
 | `services/questionService.ts` | Guards question and option-text uniqueness, sanitizes AI results, and falls back to curated data when the AI service returns `null`. |
 | `data/questionBank.ts` | Provides deterministic question sets per theme (~45 curated questions across 3 themes and 4 difficulty levels) with odd option metadata for offline play and testing. Exports `getFallbackQuestion()`. |
 | `data/themes.ts` | Defines 3 core themes (World Football, Anime Universe, Science & Discovery) with accent colors and difficulty ramp arrays, plus 2 upcoming placeholders. |
@@ -257,7 +267,7 @@ Test scaffolding is in place under `tests/` with example specs for both Vitest a
 
 ## Roadmap Ideas
 
-- Integrate real Genkit API responses (swap the mocked `Promise.resolve(null)`).
+- ~~Integrate real Genkit API responses~~ ✅ (swap the mocked `Promise.resolve(null)`) — implemented with deployed Genkit flow endpoint support, response validation, timeout, retry, and graceful fallback.
 - Implement server-backed leaderboards and friend challenges.
 - Add more theme packs and localized question variants.
 - Track streaks/combo multipliers for extra scoring depth.
