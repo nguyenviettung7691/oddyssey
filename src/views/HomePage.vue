@@ -174,5 +174,4 @@ section h2 {
   height: 16px;
   border-radius: 8px;
 }
-}
 </style>

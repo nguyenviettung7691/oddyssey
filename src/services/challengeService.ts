@@ -111,7 +111,7 @@ export async function submitChallengeScore(
 
   const challenge = challengeSnap.data() as Omit<Challenge, 'id'>;
 
-  const updates: Record<string, unknown> = {};
+  const updates: Record<string, string | number | null> = {};
 
   if (userId === challenge.challengerId) {
     updates.challengerScore = score;

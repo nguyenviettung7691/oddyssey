@@ -3,12 +3,10 @@ import {
   collection,
   query,
   where,
-  orderBy,
   onSnapshot,
   type Unsubscribe,
 } from 'firebase/firestore';
 import { getFirebaseDb, isFirebaseConfigured } from '@/services/firebaseService';
-import type { FriendRequest, Challenge } from '@/types/game';
 
 export const useNotificationStore = defineStore('notification', {
   state: () => ({

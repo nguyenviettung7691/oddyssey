@@ -9,7 +9,6 @@ import {
   where,
   orderBy,
   limit as firestoreLimit,
-  serverTimestamp,
   updateDoc,
 } from 'firebase/firestore';
 import { getFirebaseDb, isFirebaseConfigured } from '@/services/firebaseService';
@@ -54,7 +53,7 @@ export async function ensureUserProfile(
   }
 }
 
-export async function searchUsers(queryText: string, currentUserId: string): Promise<UserProfile & { id: string }[]> {
+export async function searchUsers(queryText: string, currentUserId: string): Promise<(UserProfile & { id: string })[]> {
   if (!isFirebaseConfigured() || !queryText.trim()) {
     return [];
   }
