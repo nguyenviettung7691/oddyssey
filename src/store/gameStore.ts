@@ -1,6 +1,7 @@
 ﻿import { defineStore } from 'pinia';
 import { fetchQuestion } from '@/services/questionService';
 import { coreThemes } from '@/data/themes';
+import { getCurrentLocale } from '@/i18n';
 import type {
   ActiveModifiers,
   DifficultyLevel,
@@ -121,11 +122,13 @@ export const useGameStore = defineStore('game', {
       const difficulty = getDifficultyForQuestionCount(this.questions.length);
 
       try {
+        const locale = getCurrentLocale();
         const question = await fetchQuestion(
           this.themeId,
           difficulty,
           this.seenQuestionIds,
           this.seenOptionTexts,
+          locale,
         );
         this.currentQuestion = question;
       } catch (error) {

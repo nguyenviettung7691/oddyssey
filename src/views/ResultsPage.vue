@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header>
       <ion-toolbar color="dark">
-        <ion-title>Results</ion-title>
+        <ion-title>{{ $t('results.title') }}</ion-title>
         <ion-buttons slot="end">
           <ion-button router-link="/home" fill="clear">
             <ion-icon slot="icon-only" :icon="homeOutline" />
@@ -15,45 +15,45 @@
       <ion-card class="score-card">
         <ion-card-header>
           <ion-card-subtitle>{{ themeLabel }}</ion-card-subtitle>
-          <ion-card-title>{{ game.score }} pts</ion-card-title>
+          <ion-card-title>{{ $t('results.points', { score: game.score }) }}</ion-card-title>
         </ion-card-header>
         <ion-card-content>
-          <p>You cleared {{ game.questions.length }} questions in one minute.</p>
-          <ion-chip color="success" v-if="highScoreUpdated">New personal best!</ion-chip>
-          <ion-chip color="tertiary" v-if="themeTop">Top score for this theme!</ion-chip>
+          <p>{{ $t('results.summary', { count: game.questions.length }) }}</p>
+          <ion-chip color="success" v-if="highScoreUpdated">{{ $t('results.personalBest') }}</ion-chip>
+          <ion-chip color="tertiary" v-if="themeTop">{{ $t('results.themeBest') }}</ion-chip>
           <ion-chip color="warning" v-if="saveState === 'skipped'">
-            Sign in with Google to save your runs and compete on leaderboards.
+            {{ $t('results.signInPrompt') }}
           </ion-chip>
           <ion-chip color="danger" v-if="saveState === 'error'">{{ saveError }}</ion-chip>
         </ion-card-content>
       </ion-card>
 
       <ion-list class="question-list" inset>
-        <ion-list-header>Question Review</ion-list-header>
+        <ion-list-header>{{ $t('results.questionReview') }}</ion-list-header>
         <ion-item v-for="entry in game.questions" :key="entry.question.id">
           <ion-label>
             <h3>{{ entry.question.prompt }}</h3>
             <p>
-              Odd One Out: <strong>{{ oddText(entry.question) }}</strong>
-              <span v-if="entry.chosenOptionId"> · You picked: {{ optionText(entry) }}</span>
-              <span v-else> · You skipped</span>
+              {{ $t('results.oddOneOut') }} <strong>{{ oddText(entry.question) }}</strong>
+              <span v-if="entry.chosenOptionId"> · {{ $t('results.youPicked', { option: optionText(entry) }) }}</span>
+              <span v-else> · {{ $t('results.youSkipped') }}</span>
             </p>
           </ion-label>
-          <ion-badge :color="badgeColor(entry.outcome)">{{ entry.outcome }}</ion-badge>
+          <ion-badge :color="badgeColor(entry.outcome)">{{ $t(`outcome.${entry.outcome}`) }}</ion-badge>
         </ion-item>
       </ion-list>
 
       <div class="actions">
-        <ion-button expand="block" @click="replay">Play again</ion-button>
-        <ion-button expand="block" fill="outline" router-link="/home">Choose theme</ion-button>
+        <ion-button expand="block" @click="replay">{{ $t('results.playAgain') }}</ion-button>
+        <ion-button expand="block" fill="outline" router-link="/home">{{ $t('results.chooseTheme') }}</ion-button>
       </div>
     </ion-content>
 
     <ion-content v-else class="empty-state">
       <ion-icon :icon="compassOutline" size="large" />
-      <h2>No session found</h2>
-      <p>Start a new run to see your results summary.</p>
-      <ion-button router-link="/home">Back to start</ion-button>
+      <h2>{{ $t('results.noSession') }}</h2>
+      <p>{{ $t('results.noSessionHint') }}</p>
+      <ion-button router-link="/home">{{ $t('results.backToStart') }}</ion-button>
     </ion-content>
   </ion-page>
 </template>
@@ -81,6 +81,7 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/vue';
+import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { compassOutline, homeOutline } from 'ionicons/icons';
 import { coreThemes } from '@/data/themes';
@@ -89,6 +90,7 @@ import { useUserStore } from '@/store/userStore';
 import { saveGameRecord } from '@/services/storageService';
 import type { GameRecord, PlayedQuestion, PowerCardType, PowerCardState } from '@/types/game';
 
+const { t } = useI18n();
 const router = useRouter();
 const game = useGameStore();
 const userStore = useUserStore();
@@ -101,7 +103,7 @@ const saveError = ref('');
 const hasSession = computed(() => game.status === 'finished' && game.questions.length > 0);
 
 const themeLabel = computed(
-  () => coreThemes.find((item) => item.id === game.themeId)?.label ?? 'Unknown Theme',
+  () => coreThemes.find((item) => item.id === game.themeId)?.label ?? t('results.unknownTheme'),
 );
 
 const isAuthenticated = computed(() => userStore.isAuthenticated);

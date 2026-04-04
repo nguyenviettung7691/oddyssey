@@ -7,6 +7,7 @@ export interface GenkitQuestionArgs {
   difficulty: DifficultyLevel;
   excludedQuestionSeeds: string[];
   excludedOptionTexts: string[];
+  locale?: string;
 }
 
 export interface GenkitQuestionResponse {
@@ -23,6 +24,7 @@ export function buildGenkitPrompt({
   difficulty,
   excludedQuestionSeeds,
   excludedOptionTexts,
+  locale,
 }: GenkitQuestionArgs): string {
   const exclusions = excludedOptionTexts.length
     ? `Avoid reusing these option phrasings: ${excludedOptionTexts.join('; ')}`
@@ -32,12 +34,17 @@ export function buildGenkitPrompt({
     ? `Avoid repeating prompts that match any of these seeds: ${excludedQuestionSeeds.join(', ')}.`
     : 'Keep every prompt distinct from earlier questions in this session.';
 
+  const languageInstruction = locale && locale !== 'en'
+    ? `Generate all text (prompt and option texts) in the language identified by locale code "${locale}".`
+    : 'Generate all text in English.';
+
   return [
     'You are the Oddyssey quiz master AI generating fast-paced Odd-One-Out trivia.',
     'Game rules: Present exactly four answer options. Exactly one option must be the odd one out (intentionally incorrect or thematically misaligned).',
     'The other three options must closely relate to the prompt and be unique.',
     `Theme focus: "${themeLabel}" (id: ${themeId}). The difficulty should feel ${difficulty}.`,
     'Keep the prompt concise (<120 characters) and the options under 60 characters each.',
+    languageInstruction,
     exclusions,
     previousSeeds,
     'Return JSON only with fields: prompt (string) and options (array of { text, isOddOneOut }).',

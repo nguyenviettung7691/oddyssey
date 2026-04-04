@@ -25,27 +25,40 @@ export const coreThemes: ThemeDefinition[] = [
     accentColor: '#F5A25D',
     difficultyRamp: ['easy', 'medium', 'hard', 'hard', 'expert'],
   },
-];
-
-export const upcomingThemesPlaceholders: ThemeDefinition[] = [
   {
     id: 'space-explorers',
     label: 'Space Explorers',
-    description: 'Coming soon: missions, rockets, and galaxies to unravel.',
+    description: 'Missions, rockets, and galaxies to unravel.',
     icon: 'planet',
     accentColor: '#9C6CFF',
     difficultyRamp: ['easy', 'medium', 'hard', 'expert', 'expert'],
-    comingSoon: true,
   },
   {
     id: 'street-foods',
     label: 'Street Foods',
-    description: 'Planned expansion celebrating spicy bites worldwide.',
+    description: 'Celebrating spicy bites and street eats worldwide.',
     icon: 'fast-food',
     accentColor: '#F07F52',
     difficultyRamp: ['easy', 'medium', 'medium', 'hard', 'expert'],
-    comingSoon: true,
+  },
+  {
+    id: 'world-history',
+    label: 'World History',
+    description: 'Empires, revolutions, and turning points of civilization.',
+    icon: 'book',
+    accentColor: '#6BBFB9',
+    difficultyRamp: ['easy', 'easy', 'medium', 'hard', 'expert'],
+  },
+  {
+    id: 'pop-music',
+    label: 'Pop Music',
+    description: 'Chart-toppers, iconic artists, and musical milestones.',
+    icon: 'musical-notes',
+    accentColor: '#E85D75',
+    difficultyRamp: ['easy', 'easy', 'medium', 'hard', 'expert'],
   },
 ];
+
+export const upcomingThemesPlaceholders: ThemeDefinition[] = [];
 
 export const allThemes = [...coreThemes, ...upcomingThemesPlaceholders];

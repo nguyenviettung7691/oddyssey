@@ -1,0 +1,92 @@
+{
+  "app": {
+    "title": "Oddyssey"
+  },
+  "home": {
+    "headline": "Find the Odd One Out.",
+    "subtitle": "Blitz through 60 seconds of themed trivia. Climb the streaks, trigger power cards, and keep the clock alive.",
+    "welcomeBack": "Welcome back, {name}",
+    "selectTheme": "Select your theme",
+    "startButton": "Start Oddyssey",
+    "powerCards": {
+      "title": "Power Cards",
+      "subtitle": "Each match comes with four single-use boosts.",
+      "swap": "Roll a fresh challenge instantly.",
+      "swapLabel": "Swap Question:",
+      "removeCorrect": "Trim one safe option.",
+      "removeCorrectLabel": "Remove Correct:",
+      "doubleScore": "Bank double points on a confident call.",
+      "doubleScoreLabel": "Double Score:",
+      "timeKeep": "Protect the clock from a misfire.",
+      "timeKeepLabel": "Time Keep:"
+    }
+  },
+  "themePicker": {
+    "comingSoon": "Coming Soon"
+  },
+  "game": {
+    "skipButton": "Skip (-1s)",
+    "footerNote": "Wrong calls cost 3 seconds. Stay sharp.",
+    "errorTitle": "We ran out of questions.",
+    "backToThemes": "Back to themes"
+  },
+  "hud": {
+    "timeLeft": "Time Left",
+    "score": "Score",
+    "question": "Question"
+  },
+  "powerCard": {
+    "swap": "Swap",
+    "removeCorrect": "Remove Correct",
+    "doubleScore": "Double Score",
+    "timeKeep": "Time Keep",
+    "remaining": "{count} left"
+  },
+  "results": {
+    "title": "Results",
+    "points": "{score} pts",
+    "summary": "You cleared {count} questions in one minute.",
+    "personalBest": "New personal best!",
+    "themeBest": "Top score for this theme!",
+    "signInPrompt": "Sign in with Google to save your runs and compete on leaderboards.",
+    "questionReview": "Question Review",
+    "oddOneOut": "Odd One Out:",
+    "youPicked": "You picked: {option}",
+    "youSkipped": "You skipped",
+    "playAgain": "Play again",
+    "chooseTheme": "Choose theme",
+    "noSession": "No session found",
+    "noSessionHint": "Start a new run to see your results summary.",
+    "backToStart": "Back to start",
+    "unknownTheme": "Unknown Theme"
+  },
+  "highScores": {
+    "title": "High Scores",
+    "allThemes": "All Themes",
+    "acrossAll": "Across All Themes",
+    "unknownTheme": "Unknown Theme",
+    "noRuns": "No runs logged for this theme yet. Be the first!",
+    "unknownTime": "Unknown time"
+  },
+  "profile": {
+    "title": "Profile",
+    "signedInVia": "Signed in via {provider}",
+    "guestHint": "Play as guest or link Google",
+    "signInGoogle": "Sign in with Google",
+    "signOut": "Sign out",
+    "guestAlias": "Guest alias",
+    "guestPlaceholder": "Oddyssey Explorer",
+    "useGuest": "Use guest profile",
+    "googleNotConfigured": "Set VITE_GOOGLE_CLIENT_ID in your environment to enable Google Sign-In.",
+    "recentRuns": "Your recent runs",
+    "noRuns": "No saved runs yet. Finish a game to see it here.",
+    "runSummary": "{theme} · {score} pts",
+    "unknownTime": "Unknown time",
+    "language": "Language"
+  },
+  "outcome": {
+    "correct": "correct",
+    "incorrect": "incorrect",
+    "skipped": "skipped"
+  }
+}

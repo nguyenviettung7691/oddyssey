@@ -11,18 +11,18 @@ interface RawQuestion {
 const footballQuestions: RawQuestion[] = [
   {
     id: 'football-easy-1',
-    prompt: 'Which kit color does not belong to FC Barcelona\'s traditional home strip?',
+    prompt: 'Màu áo nào không thuộc bộ trang phục sân nhà truyền thống của FC Barcelona?',
     difficulty: 'easy',
     options: [
-      { text: 'Deep blue', isOddOneOut: false },
-      { text: 'Claret red', isOddOneOut: false },
-      { text: 'Golden yellow', isOddOneOut: true },
-      { text: 'Navy stripes', isOddOneOut: false },
+      { text: 'Xanh đậm', isOddOneOut: false },
+      { text: 'Đỏ thẫm', isOddOneOut: false },
+      { text: 'Vàng kim', isOddOneOut: true },
+      { text: 'Sọc xanh đen', isOddOneOut: false },
     ],
   },
   {
     id: 'football-easy-2',
-    prompt: 'Spot the odd one out among legendary strikers.',
+    prompt: 'Tìm người khác biệt trong số các tiền đạo huyền thoại.',
     difficulty: 'easy',
     options: [
       { text: 'Thierry Henry', isOddOneOut: false },
@@ -33,7 +33,7 @@ const footballQuestions: RawQuestion[] = [
   },
   {
     id: 'football-medium-1',
-    prompt: 'Three of these clubs have won the UEFA Champions League multiple times. Which has not?',
+    prompt: 'Ba trong số các câu lạc bộ này đã vô địch UEFA Champions League nhiều lần. Đội nào chưa?',
     difficulty: 'medium',
     options: [
       { text: 'A.C. Milan', isOddOneOut: false },
@@ -44,7 +44,7 @@ const footballQuestions: RawQuestion[] = [
   },
   {
     id: 'football-medium-2',
-    prompt: 'Choose the tactical formation not commonly associated with a three-at-the-back system.',
+    prompt: 'Chọn đội hình chiến thuật không thường liên quan đến hệ thống ba hậu vệ.',
     difficulty: 'medium',
     options: [
       { text: '3-4-3', isOddOneOut: false },
@@ -55,7 +55,7 @@ const footballQuestions: RawQuestion[] = [
   },
   {
     id: 'football-hard-1',
-    prompt: 'Identify the club that does not play in the Bundesliga.',
+    prompt: 'Xác định câu lạc bộ không thi đấu ở Bundesliga.',
     difficulty: 'hard',
     options: [
       { text: 'Borussia Dortmund', isOddOneOut: false },
@@ -66,18 +66,18 @@ const footballQuestions: RawQuestion[] = [
   },
   {
     id: 'football-expert-1',
-    prompt: 'Which football law element is not part of the offside offense criteria?',
+    prompt: 'Yếu tố nào trong luật bóng đá không thuộc tiêu chí phạm lỗi việt vị?',
     difficulty: 'expert',
     options: [
-      { text: 'Being in line with the second-last defender', isOddOneOut: false },
-      { text: 'Gaining advantage from a rebound', isOddOneOut: false },
-      { text: 'Receiving the ball directly from a throw-in', isOddOneOut: true },
-      { text: 'Interfering with an opponent', isOddOneOut: false },
+      { text: 'Đứng ngang hàng với hậu vệ áp chót', isOddOneOut: false },
+      { text: 'Hưởng lợi từ bóng bật lại', isOddOneOut: false },
+      { text: 'Nhận bóng trực tiếp từ ném biên', isOddOneOut: true },
+      { text: 'Cản trở đối phương', isOddOneOut: false },
     ],
   },
   {
     id: 'football-easy-3',
-    prompt: 'Which of these players has never won the Ballon d\'Or?',
+    prompt: 'Cầu thủ nào trong số này chưa từng giành Quả bóng vàng?',
     difficulty: 'easy',
     options: [
       { text: 'Lionel Messi', isOddOneOut: false },
@@ -88,7 +88,7 @@ const footballQuestions: RawQuestion[] = [
   },
   {
     id: 'football-medium-3',
-    prompt: 'Three stadiums hosted FIFA World Cup finals. Which did not?',
+    prompt: 'Ba sân vận động đã tổ chức trận chung kết FIFA World Cup. Sân nào chưa?',
     difficulty: 'medium',
     options: [
       { text: 'Maracanã', isOddOneOut: false },
@@ -99,7 +99,7 @@ const footballQuestions: RawQuestion[] = [
   },
   {
     id: 'football-hard-2',
-    prompt: 'Which of these countries has never won the Copa América?',
+    prompt: 'Quốc gia nào trong số này chưa từng vô địch Copa América?',
     difficulty: 'hard',
     options: [
       { text: 'Uruguay', isOddOneOut: false },
@@ -110,7 +110,7 @@ const footballQuestions: RawQuestion[] = [
   },
   {
     id: 'football-hard-3',
-    prompt: 'Identify the player who has not scored in a Champions League final.',
+    prompt: 'Xác định cầu thủ chưa từng ghi bàn trong trận chung kết Champions League.',
     difficulty: 'hard',
     options: [
       { text: 'Sergio Ramos', isOddOneOut: false },
@@ -121,13 +121,13 @@ const footballQuestions: RawQuestion[] = [
   },
   {
     id: 'football-expert-2',
-    prompt: 'Which rule change was not part of the 2019 IFAB Laws of the Game revision?',
+    prompt: 'Thay đổi luật nào không nằm trong bản sửa đổi Luật Bóng đá IFAB năm 2019?',
     difficulty: 'expert',
     options: [
-      { text: 'Attackers banned from the defensive wall', isOddOneOut: false },
-      { text: 'Goal kicks needn\'t leave the box', isOddOneOut: false },
-      { text: 'VAR required for all professional leagues', isOddOneOut: true },
-      { text: 'Substituted players leave at nearest line', isOddOneOut: false },
+      { text: 'Cầu thủ tấn công bị cấm đứng trong hàng rào', isOddOneOut: false },
+      { text: 'Phát bóng từ cầu môn không cần ra khỏi vùng cấm', isOddOneOut: false },
+      { text: 'VAR bắt buộc cho tất cả các giải chuyên nghiệp', isOddOneOut: true },
+      { text: 'Cầu thủ bị thay ra phải rời sân ở vạch gần nhất', isOddOneOut: false },
     ],
   },
 ];
@@ -135,7 +135,7 @@ const footballQuestions: RawQuestion[] = [
 const animeQuestions: RawQuestion[] = [
   {
     id: 'anime-easy-1',
-    prompt: 'Which of these is not a Studio Ghibli film?',
+    prompt: 'Bộ phim nào trong số này không phải của Studio Ghibli?',
     difficulty: 'easy',
     options: [
       { text: 'Spirited Away', isOddOneOut: false },
@@ -146,7 +146,7 @@ const animeQuestions: RawQuestion[] = [
   },
   {
     id: 'anime-easy-2',
-    prompt: 'Three protagonists wield swords as their primary weapon. Who does not?',
+    prompt: 'Ba nhân vật chính sử dụng kiếm làm vũ khí chính. Ai không?',
     difficulty: 'easy',
     options: [
       { text: 'Ichigo Kurosaki', isOddOneOut: false },
@@ -157,7 +157,7 @@ const animeQuestions: RawQuestion[] = [
   },
   {
     id: 'anime-medium-1',
-    prompt: 'Identify the series that did not originate from Shonen Jump.',
+    prompt: 'Xác định bộ anime không bắt nguồn từ Shonen Jump.',
     difficulty: 'medium',
     options: [
       { text: 'Jujutsu Kaisen', isOddOneOut: false },
@@ -168,7 +168,7 @@ const animeQuestions: RawQuestion[] = [
   },
   {
     id: 'anime-medium-2',
-    prompt: 'Three composers scored major shonen soundtracks. Who is the outlier?',
+    prompt: 'Ba nhà soạn nhạc đã sáng tác nhạc phim cho các bộ shonen lớn. Ai là người khác biệt?',
     difficulty: 'medium',
     options: [
       { text: 'Yuki Hayashi', isOddOneOut: false },
@@ -179,7 +179,7 @@ const animeQuestions: RawQuestion[] = [
   },
   {
     id: 'anime-hard-1',
-    prompt: 'Find the anime that premiered after 2015.',
+    prompt: 'Tìm bộ anime ra mắt sau năm 2015.',
     difficulty: 'hard',
     options: [
       { text: 'Mob Psycho 100', isOddOneOut: true },
@@ -190,7 +190,7 @@ const animeQuestions: RawQuestion[] = [
   },
   {
     id: 'anime-expert-1',
-    prompt: 'Three of these creators won the Tezuka Osamu Cultural Prize. Which did not?',
+    prompt: 'Ba trong số các tác giả này đã giành giải Tezuka Osamu Cultural Prize. Ai chưa?',
     difficulty: 'expert',
     options: [
       { text: 'Naoki Urasawa', isOddOneOut: false },
@@ -201,7 +201,7 @@ const animeQuestions: RawQuestion[] = [
   },
   {
     id: 'anime-easy-3',
-    prompt: 'Three of these are mecha anime. Which is not?',
+    prompt: 'Ba trong số này là anime mecha. Bộ nào không phải?',
     difficulty: 'easy',
     options: [
       { text: 'Neon Genesis Evangelion', isOddOneOut: false },
@@ -212,7 +212,7 @@ const animeQuestions: RawQuestion[] = [
   },
   {
     id: 'anime-medium-3',
-    prompt: 'Which anime was not produced by studio MAPPA?',
+    prompt: 'Bộ anime nào không được sản xuất bởi studio MAPPA?',
     difficulty: 'medium',
     options: [
       { text: 'Jujutsu Kaisen', isOddOneOut: false },
@@ -223,7 +223,7 @@ const animeQuestions: RawQuestion[] = [
   },
   {
     id: 'anime-hard-2',
-    prompt: 'Three of these anime first aired before 2010. Which did not?',
+    prompt: 'Ba trong số các anime này phát sóng lần đầu trước năm 2010. Bộ nào không?',
     difficulty: 'hard',
     options: [
       { text: 'Naruto', isOddOneOut: false },
@@ -234,7 +234,7 @@ const animeQuestions: RawQuestion[] = [
   },
   {
     id: 'anime-hard-3',
-    prompt: 'Which of these anime was not animated by studio Bones?',
+    prompt: 'Bộ anime nào trong số này không được sản xuất bởi studio Bones?',
     difficulty: 'hard',
     options: [
       { text: 'Fullmetal Alchemist: Brotherhood', isOddOneOut: false },
@@ -245,7 +245,7 @@ const animeQuestions: RawQuestion[] = [
   },
   {
     id: 'anime-expert-2',
-    prompt: 'Which of these anime has not been adapted from a light novel?',
+    prompt: 'Bộ anime nào trong số này không được chuyển thể từ light novel?',
     difficulty: 'expert',
     options: [
       { text: 'Sword Art Online', isOddOneOut: false },
@@ -259,29 +259,29 @@ const animeQuestions: RawQuestion[] = [
 const scienceQuestions: RawQuestion[] = [
   {
     id: 'science-easy-1',
-    prompt: 'Which of these is not considered a noble gas?',
+    prompt: 'Chất nào trong số này không phải là khí hiếm?',
     difficulty: 'easy',
     options: [
-      { text: 'Helium', isOddOneOut: false },
+      { text: 'Heli', isOddOneOut: false },
       { text: 'Neon', isOddOneOut: false },
-      { text: 'Oxygen', isOddOneOut: true },
+      { text: 'Oxy', isOddOneOut: true },
       { text: 'Argon', isOddOneOut: false },
     ],
   },
   {
     id: 'science-easy-2',
-    prompt: 'Three inventions transformed electricity usage. Which did not?',
+    prompt: 'Ba phát minh đã cách mạng hóa việc sử dụng điện. Phát minh nào không?',
     difficulty: 'easy',
     options: [
-      { text: 'Alternating current motor', isOddOneOut: false },
-      { text: 'LED lighting', isOddOneOut: false },
-      { text: 'Steam turbine', isOddOneOut: true },
-      { text: 'Lithium-ion battery', isOddOneOut: false },
+      { text: 'Động cơ điện xoay chiều', isOddOneOut: false },
+      { text: 'Đèn LED', isOddOneOut: false },
+      { text: 'Tuabin hơi nước', isOddOneOut: true },
+      { text: 'Pin lithium-ion', isOddOneOut: false },
     ],
   },
   {
     id: 'science-medium-1',
-    prompt: 'Spot the scientist who did not publish on the theory of evolution.',
+    prompt: 'Tìm nhà khoa học không công bố công trình về thuyết tiến hóa.',
     difficulty: 'medium',
     options: [
       { text: 'Charles Darwin', isOddOneOut: false },
@@ -292,51 +292,51 @@ const scienceQuestions: RawQuestion[] = [
   },
   {
     id: 'science-medium-2',
-    prompt: 'Select the spacecraft that did not explore Mars.',
+    prompt: 'Chọn tàu vũ trụ không khám phá Sao Hỏa.',
     difficulty: 'medium',
     options: [
       { text: 'Viking 1', isOddOneOut: false },
-      { text: 'Curiosity rover', isOddOneOut: false },
+      { text: 'Curiosity', isOddOneOut: false },
       { text: 'Cassini-Huygens', isOddOneOut: true },
-      { text: 'Perseverance rover', isOddOneOut: false },
+      { text: 'Perseverance', isOddOneOut: false },
     ],
   },
   {
     id: 'science-hard-1',
-    prompt: 'Three fields fall under classical mechanics. Which does not?',
+    prompt: 'Ba lĩnh vực thuộc cơ học cổ điển. Lĩnh vực nào không?',
     difficulty: 'hard',
     options: [
-      { text: 'Kinematics', isOddOneOut: false },
-      { text: 'Dynamics', isOddOneOut: false },
-      { text: 'Thermodynamics', isOddOneOut: true },
-      { text: 'Statics', isOddOneOut: false },
+      { text: 'Động học', isOddOneOut: false },
+      { text: 'Động lực học', isOddOneOut: false },
+      { text: 'Nhiệt động lực học', isOddOneOut: true },
+      { text: 'Tĩnh học', isOddOneOut: false },
     ],
   },
   {
     id: 'science-expert-1',
-    prompt: 'Which concept is not part of the Standard Model of particle physics?',
+    prompt: 'Khái niệm nào không thuộc Mô hình Chuẩn của vật lý hạt?',
     difficulty: 'expert',
     options: [
-      { text: 'Higgs boson', isOddOneOut: false },
-      { text: 'W and Z bosons', isOddOneOut: false },
+      { text: 'Hạt Higgs boson', isOddOneOut: false },
+      { text: 'Boson W và Z', isOddOneOut: false },
       { text: 'Graviton', isOddOneOut: true },
-      { text: 'Gluons', isOddOneOut: false },
+      { text: 'Gluon', isOddOneOut: false },
     ],
   },
   {
     id: 'science-easy-3',
-    prompt: 'Which of these is not a planet in our solar system?',
+    prompt: 'Thiên thể nào trong số này không phải là hành tinh trong hệ Mặt Trời?',
     difficulty: 'easy',
     options: [
-      { text: 'Mars', isOddOneOut: false },
-      { text: 'Jupiter', isOddOneOut: false },
-      { text: 'Pluto', isOddOneOut: true },
-      { text: 'Saturn', isOddOneOut: false },
+      { text: 'Sao Hỏa', isOddOneOut: false },
+      { text: 'Sao Mộc', isOddOneOut: false },
+      { text: 'Sao Diêm Vương', isOddOneOut: true },
+      { text: 'Sao Thổ', isOddOneOut: false },
     ],
   },
   {
     id: 'science-medium-3',
-    prompt: 'Three of these scientists won a Nobel Prize in Physics. Who did not?',
+    prompt: 'Ba trong số các nhà khoa học này đã giành giải Nobel Vật lý. Ai chưa?',
     difficulty: 'medium',
     options: [
       { text: 'Albert Einstein', isOddOneOut: false },
@@ -347,7 +347,7 @@ const scienceQuestions: RawQuestion[] = [
   },
   {
     id: 'science-hard-2',
-    prompt: 'Which particle is not classified as a lepton?',
+    prompt: 'Hạt nào không được phân loại là lepton?',
     difficulty: 'hard',
     options: [
       { text: 'Electron', isOddOneOut: false },
@@ -358,24 +358,24 @@ const scienceQuestions: RawQuestion[] = [
   },
   {
     id: 'science-hard-3',
-    prompt: 'Three of these elements are lanthanides. Which is not?',
+    prompt: 'Ba trong số các nguyên tố này thuộc nhóm Lantan. Nguyên tố nào không?',
     difficulty: 'hard',
     options: [
-      { text: 'Cerium', isOddOneOut: false },
-      { text: 'Europium', isOddOneOut: false },
-      { text: 'Zirconium', isOddOneOut: true },
-      { text: 'Gadolinium', isOddOneOut: false },
+      { text: 'Xeri', isOddOneOut: false },
+      { text: 'Europi', isOddOneOut: false },
+      { text: 'Zirconi', isOddOneOut: true },
+      { text: 'Gadolini', isOddOneOut: false },
     ],
   },
   {
     id: 'science-expert-2',
-    prompt: 'Which phenomenon is not predicted by general relativity?',
+    prompt: 'Hiện tượng nào không được tiên đoán bởi thuyết tương đối rộng?',
     difficulty: 'expert',
     options: [
-      { text: 'Gravitational lensing', isOddOneOut: false },
-      { text: 'Frame-dragging', isOddOneOut: false },
-      { text: 'Quantum tunneling', isOddOneOut: true },
-      { text: 'Gravitational time dilation', isOddOneOut: false },
+      { text: 'Thấu kính hấp dẫn', isOddOneOut: false },
+      { text: 'Hiệu ứng kéo lê khung', isOddOneOut: false },
+      { text: 'Hiệu ứng đường hầm lượng tử', isOddOneOut: true },
+      { text: 'Giãn nở thời gian do hấp dẫn', isOddOneOut: false },
     ],
   },
 ];
@@ -383,7 +383,7 @@ const scienceQuestions: RawQuestion[] = [
 const spaceExplorersQuestions: RawQuestion[] = [
   {
     id: 'space-explorers-easy-1',
-    prompt: 'Three of these astronauts walked on the Moon. Who did not?',
+    prompt: 'Ba trong số các phi hành gia này đã đặt chân lên Mặt Trăng. Ai chưa?',
     difficulty: 'easy',
     options: [
       { text: 'Neil Armstrong', isOddOneOut: false },
@@ -394,7 +394,7 @@ const spaceExplorersQuestions: RawQuestion[] = [
   },
   {
     id: 'space-explorers-easy-2',
-    prompt: 'Which space agency is not a partner on the International Space Station?',
+    prompt: 'Cơ quan vũ trụ nào không phải là đối tác trên Trạm Vũ trụ Quốc tế?',
     difficulty: 'easy',
     options: [
       { text: 'NASA', isOddOneOut: false },
@@ -405,7 +405,7 @@ const spaceExplorersQuestions: RawQuestion[] = [
   },
   {
     id: 'space-explorers-easy-3',
-    prompt: 'Three of these are NASA space shuttle orbiters. Which is not?',
+    prompt: 'Ba trong số này là tàu con thoi của NASA. Tàu nào không phải?',
     difficulty: 'easy',
     options: [
       { text: 'Columbia', isOddOneOut: false },
@@ -416,7 +416,7 @@ const spaceExplorersQuestions: RawQuestion[] = [
   },
   {
     id: 'space-explorers-medium-1',
-    prompt: 'Which mission was not part of the Apollo program?',
+    prompt: 'Sứ mệnh nào không thuộc chương trình Apollo?',
     difficulty: 'medium',
     options: [
       { text: 'Apollo 11', isOddOneOut: false },
@@ -427,7 +427,7 @@ const spaceExplorersQuestions: RawQuestion[] = [
   },
   {
     id: 'space-explorers-medium-2',
-    prompt: 'Three of these are moons of Jupiter. Which is not?',
+    prompt: 'Ba trong số này là vệ tinh của Sao Mộc. Vệ tinh nào không phải?',
     difficulty: 'medium',
     options: [
       { text: 'Europa', isOddOneOut: false },
@@ -438,7 +438,7 @@ const spaceExplorersQuestions: RawQuestion[] = [
   },
   {
     id: 'space-explorers-medium-3',
-    prompt: 'Which rover was not designed to explore Mars?',
+    prompt: 'Xe tự hành nào không được thiết kế để khám phá Sao Hỏa?',
     difficulty: 'medium',
     options: [
       { text: 'Opportunity', isOddOneOut: false },
@@ -449,7 +449,7 @@ const spaceExplorersQuestions: RawQuestion[] = [
   },
   {
     id: 'space-explorers-hard-1',
-    prompt: 'Which spacecraft is not on a trajectory to leave the solar system?',
+    prompt: 'Tàu vũ trụ nào không có quỹ đạo rời khỏi hệ Mặt Trời?',
     difficulty: 'hard',
     options: [
       { text: 'Voyager 1', isOddOneOut: false },
@@ -460,7 +460,7 @@ const spaceExplorersQuestions: RawQuestion[] = [
   },
   {
     id: 'space-explorers-hard-2',
-    prompt: 'Three of these astronauts commanded an Apollo mission. Who did not?',
+    prompt: 'Ba trong số các phi hành gia này đã chỉ huy một sứ mệnh Apollo. Ai chưa?',
     difficulty: 'hard',
     options: [
       { text: 'Jim Lovell', isOddOneOut: false },
@@ -471,7 +471,7 @@ const spaceExplorersQuestions: RawQuestion[] = [
   },
   {
     id: 'space-explorers-hard-3',
-    prompt: 'Which telescope does not operate primarily in infrared wavelengths?',
+    prompt: 'Kính thiên văn nào không hoạt động chủ yếu ở bước sóng hồng ngoại?',
     difficulty: 'hard',
     options: [
       { text: 'James Webb Space Telescope', isOddOneOut: false },
@@ -482,18 +482,18 @@ const spaceExplorersQuestions: RawQuestion[] = [
   },
   {
     id: 'space-explorers-expert-1',
-    prompt: 'Which propulsion method has not been used on an operational spacecraft?',
+    prompt: 'Phương pháp đẩy nào chưa được sử dụng trên tàu vũ trụ thực tế?',
     difficulty: 'expert',
     options: [
-      { text: 'Ion thruster', isOddOneOut: false },
-      { text: 'Solar sail', isOddOneOut: false },
+      { text: 'Động cơ ion', isOddOneOut: false },
+      { text: 'Buồm Mặt Trời', isOddOneOut: false },
       { text: 'EmDrive', isOddOneOut: true },
-      { text: 'Hall-effect thruster', isOddOneOut: false },
+      { text: 'Động cơ hiệu ứng Hall', isOddOneOut: false },
     ],
   },
   {
     id: 'space-explorers-expert-2',
-    prompt: 'Three of these missions used a Venus gravity assist. Which did not?',
+    prompt: 'Ba trong số các sứ mệnh này đã sử dụng hỗ trợ hấp dẫn từ Sao Kim. Sứ mệnh nào không?',
     difficulty: 'expert',
     options: [
       { text: 'Galileo', isOddOneOut: false },
@@ -507,18 +507,18 @@ const spaceExplorersQuestions: RawQuestion[] = [
 const streetFoodsQuestions: RawQuestion[] = [
   {
     id: 'street-foods-easy-1',
-    prompt: 'Three of these are traditional Japanese street foods. Which is not?',
+    prompt: 'Ba trong số này là món ăn đường phố truyền thống Nhật Bản. Món nào không phải?',
     difficulty: 'easy',
     options: [
       { text: 'Takoyaki', isOddOneOut: false },
       { text: 'Yakitori', isOddOneOut: false },
-      { text: 'Banh Mi', isOddOneOut: true },
+      { text: 'Bánh Mì', isOddOneOut: true },
       { text: 'Okonomiyaki', isOddOneOut: false },
     ],
   },
   {
     id: 'street-foods-easy-2',
-    prompt: 'Which of these is not a Mexican street food?',
+    prompt: 'Món nào trong số này không phải là món ăn đường phố Mexico?',
     difficulty: 'easy',
     options: [
       { text: 'Tacos al Pastor', isOddOneOut: false },
@@ -529,7 +529,7 @@ const streetFoodsQuestions: RawQuestion[] = [
   },
   {
     id: 'street-foods-easy-3',
-    prompt: 'Three of these are popular Indian street snacks. Which is not?',
+    prompt: 'Ba trong số này là món ăn vặt đường phố phổ biến của Ấn Độ. Món nào không phải?',
     difficulty: 'easy',
     options: [
       { text: 'Samosa', isOddOneOut: false },
@@ -540,7 +540,7 @@ const streetFoodsQuestions: RawQuestion[] = [
   },
   {
     id: 'street-foods-medium-1',
-    prompt: 'Which street food did not originate in Southeast Asia?',
+    prompt: 'Món ăn đường phố nào không có nguồn gốc từ Đông Nam Á?',
     difficulty: 'medium',
     options: [
       { text: 'Satay', isOddOneOut: false },
@@ -551,7 +551,7 @@ const streetFoodsQuestions: RawQuestion[] = [
   },
   {
     id: 'street-foods-medium-2',
-    prompt: 'Three of these are types of dumplings. Which is not?',
+    prompt: 'Ba trong số này là các loại bánh bao. Món nào không phải?',
     difficulty: 'medium',
     options: [
       { text: 'Gyoza', isOddOneOut: false },
@@ -562,7 +562,7 @@ const streetFoodsQuestions: RawQuestion[] = [
   },
   {
     id: 'street-foods-medium-3',
-    prompt: 'Three of these are popular Middle Eastern street foods. Which is not?',
+    prompt: 'Ba trong số này là món ăn đường phố phổ biến ở Trung Đông. Món nào không phải?',
     difficulty: 'medium',
     options: [
       { text: 'Falafel', isOddOneOut: false },
@@ -573,7 +573,7 @@ const streetFoodsQuestions: RawQuestion[] = [
   },
   {
     id: 'street-foods-hard-1',
-    prompt: 'Which street food dish does not feature rice as a main ingredient?',
+    prompt: 'Món ăn đường phố nào không có gạo là nguyên liệu chính?',
     difficulty: 'hard',
     options: [
       { text: 'Onigiri', isOddOneOut: false },
@@ -584,7 +584,7 @@ const streetFoodsQuestions: RawQuestion[] = [
   },
   {
     id: 'street-foods-hard-2',
-    prompt: 'Three of these street foods are traditionally deep-fried. Which is not?',
+    prompt: 'Ba trong số các món ăn đường phố này theo truyền thống được chiên ngập dầu. Món nào không?',
     difficulty: 'hard',
     options: [
       { text: 'Churros', isOddOneOut: false },
@@ -595,7 +595,7 @@ const streetFoodsQuestions: RawQuestion[] = [
   },
   {
     id: 'street-foods-hard-3',
-    prompt: 'Which city is not widely considered a world capital of street food?',
+    prompt: 'Thành phố nào không được xem là thủ đô ẩm thực đường phố thế giới?',
     difficulty: 'hard',
     options: [
       { text: 'Bangkok', isOddOneOut: false },
@@ -606,7 +606,7 @@ const streetFoodsQuestions: RawQuestion[] = [
   },
   {
     id: 'street-foods-expert-1',
-    prompt: 'Which of these flatbreads is not traditionally cooked in a tandoor oven?',
+    prompt: 'Loại bánh mì dẹt nào không được nướng truyền thống trong lò tandoor?',
     difficulty: 'expert',
     options: [
       { text: 'Naan', isOddOneOut: false },
@@ -617,7 +617,7 @@ const streetFoodsQuestions: RawQuestion[] = [
   },
   {
     id: 'street-foods-expert-2',
-    prompt: 'Three of these sauces have chili peppers as a base. Which does not?',
+    prompt: 'Ba trong số các loại nước chấm này có ớt làm nguyên liệu chính. Loại nào không?',
     difficulty: 'expert',
     options: [
       { text: 'Sriracha', isOddOneOut: false },
@@ -631,7 +631,7 @@ const streetFoodsQuestions: RawQuestion[] = [
 const worldHistoryQuestions: RawQuestion[] = [
   {
     id: 'world-history-easy-1',
-    prompt: 'Three of these were Ancient Greek city-states. Which was not?',
+    prompt: 'Ba trong số này là thành bang Hy Lạp cổ đại. Thành bang nào không phải?',
     difficulty: 'easy',
     options: [
       { text: 'Athens', isOddOneOut: false },
@@ -642,18 +642,18 @@ const worldHistoryQuestions: RawQuestion[] = [
   },
   {
     id: 'world-history-easy-2',
-    prompt: 'Which of these was not an Axis power in World War II?',
+    prompt: 'Quốc gia nào trong số này không phải là phe Trục trong Thế chiến II?',
     difficulty: 'easy',
     options: [
-      { text: 'Germany', isOddOneOut: false },
-      { text: 'Japan', isOddOneOut: false },
-      { text: 'United Kingdom', isOddOneOut: true },
-      { text: 'Italy', isOddOneOut: false },
+      { text: 'Đức', isOddOneOut: false },
+      { text: 'Nhật Bản', isOddOneOut: false },
+      { text: 'Vương quốc Anh', isOddOneOut: true },
+      { text: 'Ý', isOddOneOut: false },
     ],
   },
   {
     id: 'world-history-easy-3',
-    prompt: 'Three of these figures are associated with the French Revolution. Who is not?',
+    prompt: 'Ba trong số các nhân vật này gắn liền với Cách mạng Pháp. Ai không?',
     difficulty: 'easy',
     options: [
       { text: 'Robespierre', isOddOneOut: false },
@@ -664,18 +664,18 @@ const worldHistoryQuestions: RawQuestion[] = [
   },
   {
     id: 'world-history-medium-1',
-    prompt: 'Which event did not occur during the 18th century?',
+    prompt: 'Sự kiện nào không xảy ra trong thế kỷ 18?',
     difficulty: 'medium',
     options: [
-      { text: 'American Revolution', isOddOneOut: false },
-      { text: 'French Revolution', isOddOneOut: false },
-      { text: 'Russian Revolution', isOddOneOut: true },
-      { text: 'Industrial Revolution begins', isOddOneOut: false },
+      { text: 'Cách mạng Mỹ', isOddOneOut: false },
+      { text: 'Cách mạng Pháp', isOddOneOut: false },
+      { text: 'Cách mạng Nga', isOddOneOut: true },
+      { text: 'Cách mạng Công nghiệp bắt đầu', isOddOneOut: false },
     ],
   },
   {
     id: 'world-history-medium-2',
-    prompt: 'Three of these explorers sailed for Spain. Who did not?',
+    prompt: 'Ba trong số các nhà thám hiểm này đi biển cho Tây Ban Nha. Ai không?',
     difficulty: 'medium',
     options: [
       { text: 'Christopher Columbus', isOddOneOut: false },
@@ -686,68 +686,68 @@ const worldHistoryQuestions: RawQuestion[] = [
   },
   {
     id: 'world-history-medium-3',
-    prompt: 'Which ancient wonder was not located in the Mediterranean region?',
+    prompt: 'Kỳ quan cổ đại nào không nằm ở vùng Địa Trung Hải?',
     difficulty: 'medium',
     options: [
-      { text: 'Colossus of Rhodes', isOddOneOut: false },
-      { text: 'Lighthouse of Alexandria', isOddOneOut: false },
-      { text: 'Hanging Gardens of Babylon', isOddOneOut: true },
-      { text: 'Temple of Artemis at Ephesus', isOddOneOut: false },
+      { text: 'Tượng thần Mặt Trời ở Rhodes', isOddOneOut: false },
+      { text: 'Ngọn hải đăng Alexandria', isOddOneOut: false },
+      { text: 'Vườn treo Babylon', isOddOneOut: true },
+      { text: 'Đền thờ Artemis ở Ephesus', isOddOneOut: false },
     ],
   },
   {
     id: 'world-history-hard-1',
-    prompt: 'Which treaty did not end a major European war?',
+    prompt: 'Hiệp ước nào không kết thúc một cuộc chiến tranh lớn ở châu Âu?',
     difficulty: 'hard',
     options: [
-      { text: 'Treaty of Versailles', isOddOneOut: false },
-      { text: 'Treaty of Westphalia', isOddOneOut: false },
-      { text: 'Treaty of Tordesillas', isOddOneOut: true },
-      { text: 'Treaty of Utrecht', isOddOneOut: false },
+      { text: 'Hiệp ước Versailles', isOddOneOut: false },
+      { text: 'Hiệp ước Westphalia', isOddOneOut: false },
+      { text: 'Hiệp ước Tordesillas', isOddOneOut: true },
+      { text: 'Hiệp ước Utrecht', isOddOneOut: false },
     ],
   },
   {
     id: 'world-history-hard-2',
-    prompt: 'Three of these dynasties ruled China. Which did not?',
+    prompt: 'Ba trong số các triều đại này đã cai trị Trung Quốc. Triều đại nào không?',
     difficulty: 'hard',
     options: [
-      { text: 'Tang Dynasty', isOddOneOut: false },
-      { text: 'Song Dynasty', isOddOneOut: false },
-      { text: 'Mughal Dynasty', isOddOneOut: true },
-      { text: 'Qing Dynasty', isOddOneOut: false },
+      { text: 'Nhà Đường', isOddOneOut: false },
+      { text: 'Nhà Tống', isOddOneOut: false },
+      { text: 'Đế chế Mughal', isOddOneOut: true },
+      { text: 'Nhà Thanh', isOddOneOut: false },
     ],
   },
   {
     id: 'world-history-hard-3',
-    prompt: 'Which philosopher was not from Ancient Greece?',
+    prompt: 'Triết gia nào không phải người Hy Lạp cổ đại?',
     difficulty: 'hard',
     options: [
       { text: 'Socrates', isOddOneOut: false },
       { text: 'Plato', isOddOneOut: false },
-      { text: 'Confucius', isOddOneOut: true },
+      { text: 'Khổng Tử', isOddOneOut: true },
       { text: 'Aristotle', isOddOneOut: false },
     ],
   },
   {
     id: 'world-history-expert-1',
-    prompt: 'Three of these revolutions occurred in 1848. Which did not?',
+    prompt: 'Ba trong số các cuộc cách mạng này xảy ra vào năm 1848. Cuộc cách mạng nào không?',
     difficulty: 'expert',
     options: [
-      { text: 'French February Revolution', isOddOneOut: false },
-      { text: 'Hungarian Revolution', isOddOneOut: false },
-      { text: 'Haitian Revolution', isOddOneOut: true },
-      { text: 'German March Revolution', isOddOneOut: false },
+      { text: 'Cách mạng tháng Hai Pháp', isOddOneOut: false },
+      { text: 'Cách mạng Hungary', isOddOneOut: false },
+      { text: 'Cách mạng Haiti', isOddOneOut: true },
+      { text: 'Cách mạng tháng Ba Đức', isOddOneOut: false },
     ],
   },
   {
     id: 'world-history-expert-2',
-    prompt: 'Which work was not written during the Enlightenment era?',
+    prompt: 'Tác phẩm nào không được viết trong thời kỳ Khai sáng?',
     difficulty: 'expert',
     options: [
-      { text: 'The Social Contract by Rousseau', isOddOneOut: false },
-      { text: 'The Spirit of the Laws by Montesquieu', isOddOneOut: false },
-      { text: 'Leviathan by Hobbes', isOddOneOut: true },
-      { text: 'An Essay Concerning Human Understanding', isOddOneOut: false },
+      { text: 'Khế ước Xã hội của Rousseau', isOddOneOut: false },
+      { text: 'Tinh thần Pháp luật của Montesquieu', isOddOneOut: false },
+      { text: 'Leviathan của Hobbes', isOddOneOut: true },
+      { text: 'Tiểu luận về Nhận thức Con người', isOddOneOut: false },
     ],
   },
 ];
@@ -755,7 +755,7 @@ const worldHistoryQuestions: RawQuestion[] = [
 const popMusicQuestions: RawQuestion[] = [
   {
     id: 'pop-music-easy-1',
-    prompt: 'Three of these artists are members of BTS. Who is not?',
+    prompt: 'Ba trong số các nghệ sĩ này là thành viên BTS. Ai không phải?',
     difficulty: 'easy',
     options: [
       { text: 'Jungkook', isOddOneOut: false },
@@ -766,7 +766,7 @@ const popMusicQuestions: RawQuestion[] = [
   },
   {
     id: 'pop-music-easy-2',
-    prompt: 'Which of these songs was not performed by Michael Jackson?',
+    prompt: 'Bài hát nào trong số này không phải của Michael Jackson?',
     difficulty: 'easy',
     options: [
       { text: 'Thriller', isOddOneOut: false },
@@ -777,7 +777,7 @@ const popMusicQuestions: RawQuestion[] = [
   },
   {
     id: 'pop-music-easy-3',
-    prompt: 'Three of these are Taylor Swift albums. Which is not?',
+    prompt: 'Ba trong số này là album của Taylor Swift. Album nào không phải?',
     difficulty: 'easy',
     options: [
       { text: '1989', isOddOneOut: false },
@@ -788,7 +788,7 @@ const popMusicQuestions: RawQuestion[] = [
   },
   {
     id: 'pop-music-medium-1',
-    prompt: 'Which artist was not part of a famous pop duo?',
+    prompt: 'Nghệ sĩ nào không từng tham gia một bộ đôi nhạc pop nổi tiếng?',
     difficulty: 'medium',
     options: [
       { text: 'Sonny Bono', isOddOneOut: false },
@@ -799,7 +799,7 @@ const popMusicQuestions: RawQuestion[] = [
   },
   {
     id: 'pop-music-medium-2',
-    prompt: 'Three of these artists headlined the Super Bowl halftime show. Who has not?',
+    prompt: 'Ba trong số các nghệ sĩ này đã biểu diễn tại Super Bowl halftime show. Ai chưa?',
     difficulty: 'medium',
     options: [
       { text: 'Beyoncé', isOddOneOut: false },
@@ -810,7 +810,7 @@ const popMusicQuestions: RawQuestion[] = [
   },
   {
     id: 'pop-music-medium-3',
-    prompt: 'Which of these artists is not originally from the United Kingdom?',
+    prompt: 'Nghệ sĩ nào trong số này không đến từ Vương quốc Anh?',
     difficulty: 'medium',
     options: [
       { text: 'Adele', isOddOneOut: false },
@@ -821,7 +821,7 @@ const popMusicQuestions: RawQuestion[] = [
   },
   {
     id: 'pop-music-hard-1',
-    prompt: 'Three of these artists write most of their own hit songs. Who does not?',
+    prompt: 'Ba trong số các nghệ sĩ này tự sáng tác hầu hết bài hit của mình. Ai không?',
     difficulty: 'hard',
     options: [
       { text: 'Billie Eilish', isOddOneOut: false },
@@ -832,7 +832,7 @@ const popMusicQuestions: RawQuestion[] = [
   },
   {
     id: 'pop-music-hard-2',
-    prompt: 'Which music festival does not take place in the United States?',
+    prompt: 'Lễ hội âm nhạc nào không diễn ra tại Hoa Kỳ?',
     difficulty: 'hard',
     options: [
       { text: 'Coachella', isOddOneOut: false },
@@ -843,7 +843,7 @@ const popMusicQuestions: RawQuestion[] = [
   },
   {
     id: 'pop-music-hard-3',
-    prompt: 'Which of these music genres did not originate in the United States?',
+    prompt: 'Thể loại âm nhạc nào trong số này không bắt nguồn từ Hoa Kỳ?',
     difficulty: 'hard',
     options: [
       { text: 'Jazz', isOddOneOut: false },
@@ -854,7 +854,7 @@ const popMusicQuestions: RawQuestion[] = [
   },
   {
     id: 'pop-music-expert-1',
-    prompt: 'Which of these artists did not emerge from a talent competition show?',
+    prompt: 'Nghệ sĩ nào trong số này không xuất thân từ một chương trình tìm kiếm tài năng?',
     difficulty: 'expert',
     options: [
       { text: 'Kelly Clarkson', isOddOneOut: false },
@@ -865,7 +865,7 @@ const popMusicQuestions: RawQuestion[] = [
   },
   {
     id: 'pop-music-expert-2',
-    prompt: 'Which record label is not one of the "Big Three" major labels?',
+    prompt: 'Hãng thu âm nào không thuộc "Ba ông lớn" của ngành công nghiệp âm nhạc?',
     difficulty: 'expert',
     options: [
       { text: 'Universal Music Group', isOddOneOut: false },

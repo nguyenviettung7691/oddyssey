@@ -11,7 +11,7 @@
         <ion-buttons slot="end">
           <ion-button fill="clear" @click="handleSkip" :disabled="!canInteract">
             <ion-icon :icon="playSkipForwardOutline" slot="start" />
-            Skip (-1s)
+            {{ $t('game.skipButton') }}
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
@@ -39,15 +39,15 @@
         <PowerCardsStrip :cards="game.powerCardsList" :disabled="!canInteract" @use="handlePowerCard" />
 
         <ion-text color="medium" class="footer-note">
-          Wrong calls cost 3 seconds. Stay sharp.
+          {{ $t('game.footerNote') }}
         </ion-text>
       </div>
 
       <div v-else class="error-state">
         <ion-icon :icon="warningOutline" size="large" />
-        <h2>We ran out of questions.</h2>
+        <h2>{{ $t('game.errorTitle') }}</h2>
         <p>{{ game.error }}</p>
-        <ion-button expand="block" router-link="/home">Back to themes</ion-button>
+        <ion-button expand="block" router-link="/home">{{ $t('game.backToThemes') }}</ion-button>
       </div>
     </ion-content>
   </ion-page>

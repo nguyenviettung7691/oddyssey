@@ -30,7 +30,7 @@
 
     <ion-row v-if="upcomingThemes.length">
       <ion-col size="12">
-        <ion-text color="medium" class="upcoming-label">Coming Soon</ion-text>
+        <ion-text color="medium" class="upcoming-label">{{ $t('themePicker.comingSoon') }}</ion-text>
       </ion-col>
       <ion-col
         v-for="theme in upcomingThemes"
@@ -65,7 +65,7 @@ import {
   IonLabel,
   IonText,
 } from '@ionic/vue';
-import { bookOutline, fastFoodOutline, flaskOutline, footballOutline, planetOutline, sparklesOutline } from 'ionicons/icons';
+import { bookOutline, fastFoodOutline, flaskOutline, footballOutline, musicalNotesOutline, planetOutline, sparklesOutline } from 'ionicons/icons';
 import type { ThemeDefinition } from '@/types/game';
 
 const { themes, upcomingThemes, modelValue, disabled } = defineProps<{
@@ -86,6 +86,7 @@ const icons: Record<string, string> = {
   planet: planetOutline,
   'fast-food': fastFoodOutline,
   book: bookOutline,
+  'musical-notes': musicalNotesOutline,
 };
 </script>
 
