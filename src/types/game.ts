@@ -150,3 +150,89 @@ export interface Challenge {
   expiresAt: string;
   winnerId: string | null;
 }
+
+// --- Weekly Events ---
+
+export type EventType = 'weekly' | 'seasonal' | 'special';
+export type EventStatus = 'upcoming' | 'active' | 'completed' | 'archived';
+
+export interface EventRules {
+  timeLimit?: number;
+  scoreMultiplier?: number;
+  allowedPowerCards?: PowerCardType[];
+  difficultyOverride?: DifficultyLevel;
+}
+
+export interface GameEvent {
+  id: string;
+  title: string;
+  description: string;
+  themeId: string;
+  themeLabel: string;
+  eventType: EventType;
+  startTime: string;
+  endTime: string;
+  status: EventStatus;
+  rules: EventRules;
+  participantCount: number;
+  createdAt: string;
+}
+
+export interface EventStanding {
+  userId: string;
+  displayName: string;
+  avatarUrl?: string;
+  bestScore: number;
+  totalScore: number;
+  gamesPlayed: number;
+  bestStreak: number;
+  lastPlayedAt: string;
+  joinedAt: string;
+  rank?: number;
+}
+
+// --- Multiplayer (Versus / Cooperative) ---
+
+export type MatchStatus = 'waiting' | 'ready' | 'playing' | 'finished' | 'abandoned';
+export type MatchMode = 'versus' | 'cooperative';
+
+export interface Match {
+  id: string;
+  player1Id: string;
+  player1DisplayName: string;
+  player1AvatarUrl?: string;
+  player2Id: string;
+  player2DisplayName: string;
+  player2AvatarUrl?: string;
+  mode: MatchMode;
+  status: MatchStatus;
+  themeId: string;
+  themeLabel: string;
+  player1Score: number | null;
+  player2Score: number | null;
+  player1Ready: boolean;
+  player2Ready: boolean;
+  teamScore: number | null;
+  winnerId: string | null;
+  startedAt: string | null;
+  createdAt: string;
+}
+
+export interface MatchmakingEntry {
+  id: string;
+  userId: string;
+  displayName: string;
+  avatarUrl?: string;
+  themeId: string;
+  mode: MatchMode;
+  status: 'searching' | 'matched';
+  matchId: string | null;
+  createdAt: string;
+}
+
+export interface PlayerMatchState {
+  currentScore: number;
+  currentStreak: number;
+  questionsAnswered: number;
+  lastAnsweredAt: string;
+}
