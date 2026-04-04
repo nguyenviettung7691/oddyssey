@@ -128,6 +128,7 @@ import { useGameStore } from '@/store/gameStore';
 import { useUserStore } from '@/store/userStore';
 import { saveGameRecord } from '@/services/storageService';
 import { submitChallengeScore, getChallengeDetails } from '@/services/challengeService';
+import { submitEventScore } from '@/services/eventService';
 import type { GameRecord, PlayedQuestion, PowerCardType, PowerCardState, Challenge } from '@/types/game';
 import { comboMultiplierFromStreak } from '@/utils/streak';
 
@@ -249,6 +250,14 @@ async function persistResult(): Promise<void> {
         }
       } catch (challengeError) {
         console.warn('[Oddyssey] Failed to submit challenge score', challengeError);
+      }
+    }
+
+    if (game.eventId && userStore.user?.id) {
+      try {
+        await submitEventScore(game.eventId, snapshot);
+      } catch (eventError) {
+        console.warn('[Oddyssey] Failed to submit event score', eventError);
       }
     }
   } catch (error) {

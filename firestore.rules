@@ -58,5 +58,63 @@ service cloud.firestore {
             || resource.data.challengedId == request.auth.uid);
       allow delete: if false;
     }
+
+    // Events: readable by all authenticated users
+    match /events/{eventId} {
+      allow read: if request.auth != null;
+      allow create, delete: if false;
+      allow update: if false;
+
+      // Event standings: users can read all, write their own
+      match /standings/{userId} {
+        allow read: if request.auth != null;
+        allow create: if request.auth != null
+          && request.auth.uid == userId;
+        allow update: if request.auth != null
+          && request.auth.uid == userId;
+        allow delete: if false;
+      }
+
+      // Event game records: authenticated users can create their own
+      match /gameRecords/{recordId} {
+        allow read: if request.auth != null;
+        allow create: if request.auth != null
+          && request.resource.data.userId == request.auth.uid
+          && request.resource.data.score is number
+          && request.resource.data.score >= 0;
+        allow update, delete: if false;
+      }
+    }
+
+    // Matches: only participants can read/write
+    match /matches/{matchId} {
+      allow read: if request.auth != null
+        && (resource.data.player1Id == request.auth.uid
+            || resource.data.player2Id == request.auth.uid);
+      allow create: if request.auth != null
+        && (request.resource.data.player1Id == request.auth.uid
+            || request.resource.data.player2Id == request.auth.uid);
+      allow update: if request.auth != null
+        && (resource.data.player1Id == request.auth.uid
+            || resource.data.player2Id == request.auth.uid);
+      allow delete: if false;
+
+      // Per-player live state
+      match /state/{playerId} {
+        allow read: if request.auth != null;
+        allow write: if request.auth != null
+          && request.auth.uid == playerId;
+      }
+    }
+
+    // Matchmaking: authenticated users can manage their own entries
+    match /matchmaking/{entryId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+        && request.resource.data.userId == request.auth.uid;
+      allow update: if request.auth != null;
+      allow delete: if request.auth != null
+        && resource.data.userId == request.auth.uid;
+    }
   }
 }

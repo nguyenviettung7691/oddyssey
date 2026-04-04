@@ -4,6 +4,9 @@
       <ion-toolbar color="dark">
         <ion-title>{{ $t('app.title') }}</ion-title>
         <ion-buttons slot="end">
+          <ion-button v-if="firebaseReady" router-link="/events" fill="clear">
+            <ion-icon slot="icon-only" :icon="calendarOutline" />
+          </ion-button>
           <ion-button v-if="firebaseReady && userStore.isAuthenticated" router-link="/friends" fill="clear">
             <ion-icon slot="icon-only" :icon="peopleOutline" />
             <ion-badge v-if="notificationStore.friendsBadge > 0" color="danger" class="nav-badge">{{ notificationStore.friendsBadge }}</ion-badge>
@@ -30,6 +33,19 @@
           <ion-icon :icon="sparklesOutline" />
           <ion-label>{{ $t('home.welcomeBack', { name: userStore.displayName }) }}</ion-label>
         </ion-chip>
+      </section>
+
+      <EventBanner
+        v-if="featuredEvent"
+        :event="featuredEvent"
+        @select="goToEventDetail"
+      />
+
+      <section v-if="firebaseReady && userStore.isAuthenticated" class="multiplayer-section">
+        <ion-button expand="block" fill="outline" @click="goToMatchmaking">
+          <ion-icon :icon="gameControllerOutline" slot="start" />
+          {{ $t('multiplayer.findMatch') }}
+        </ion-button>
       </section>
 
       <section>
@@ -66,7 +82,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import {
   IonBadge,
   IonButtons,
@@ -87,18 +103,23 @@ import {
   IonToolbar,
 } from '@ionic/vue';
 import { useRouter } from 'vue-router';
-import { trophyOutline, personCircleOutline, sparklesOutline, peopleOutline, flashOutline } from 'ionicons/icons';
+import { trophyOutline, personCircleOutline, sparklesOutline, peopleOutline, flashOutline, calendarOutline, gameControllerOutline } from 'ionicons/icons';
 import { coreThemes, upcomingThemesPlaceholders } from '@/data/themes';
 import ThemePicker from '@/components/ThemePicker.vue';
+import EventBanner from '@/components/EventBanner.vue';
 import { useUserStore } from '@/store/userStore';
 import { useNotificationStore } from '@/store/notificationStore';
+import { useEventStore } from '@/store/eventStore';
 import { isFirebaseConfigured } from '@/services/firebaseService';
 
 const router = useRouter();
 const userStore = useUserStore();
 const notificationStore = useNotificationStore();
+const eventStore = useEventStore();
 const selectedTheme = ref<string | null>(coreThemes[0]?.id ?? null);
 const firebaseReady = isFirebaseConfigured();
+
+const featuredEvent = computed(() => eventStore.featuredEvent);
 
 function begin(): void {
   if (!selectedTheme.value) {
@@ -107,7 +128,25 @@ function begin(): void {
   router.push({ name: 'Game', query: { theme: selectedTheme.value } });
 }
 
+function goToEvents(): void {
+  router.push({ name: 'Events' });
+}
+
+function goToMatchmaking(): void {
+  router.push({ name: 'Matchmaking' });
+}
+
+function goToEventDetail(eventId: string): void {
+  router.push({ name: 'EventDetail', params: { eventId } });
+}
+
 const upcomingThemes = upcomingThemesPlaceholders;
+
+onMounted(() => {
+  if (firebaseReady) {
+    eventStore.fetchActiveEvents();
+  }
+});
 </script>
 
 <style scoped>

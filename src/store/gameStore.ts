@@ -52,6 +52,8 @@ export const useGameStore = defineStore('game', {
     themeId: '',
     themeLabel: '',
     challengeId: '' as string | null,
+    eventId: '' as string | null,
+    matchId: '' as string | null,
     remainingTime: GAME_DURATION_SECONDS,
     score: 0,
     currentStreak: 0,
@@ -76,6 +78,12 @@ export const useGameStore = defineStore('game', {
     isRunning(state): boolean {
       return state.status === 'running';
     },
+    isEventMode(state): boolean {
+      return !!state.eventId;
+    },
+    isMultiplayerMode(state): boolean {
+      return !!state.matchId;
+    },
     comboMultiplier(state): number {
       return comboMultiplierFromStreak(state.currentStreak);
     },
@@ -88,6 +96,8 @@ export const useGameStore = defineStore('game', {
       this.themeId = '';
       this.themeLabel = '';
       this.challengeId = null;
+      this.eventId = null;
+      this.matchId = null;
       this.remainingTime = GAME_DURATION_SECONDS;
       this.score = 0;
       this.currentStreak = 0;
@@ -105,7 +115,7 @@ export const useGameStore = defineStore('game', {
       this.error = null;
       this.currentQuestionCardsUsed = new Set();
     },
-    async startGame(themeId: string, challengeId?: string): Promise<void> {
+    async startGame(themeId: string, challengeId?: string, eventId?: string, matchId?: string): Promise<void> {
       const theme = coreThemes.find((item) => item.id === themeId);
       if (!theme) {
         throw new Error(`Theme with id ${themeId} not found.`);
@@ -117,6 +127,8 @@ export const useGameStore = defineStore('game', {
       this.themeId = theme.id;
       this.themeLabel = theme.label;
       this.challengeId = challengeId ?? null;
+      this.eventId = eventId ?? null;
+      this.matchId = matchId ?? null;
       this.startedAt = new Date().toISOString();
 
       await this.fetchNextQuestion();

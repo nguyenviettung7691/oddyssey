@@ -7,6 +7,9 @@ const HighScoresPage = () => import('@/views/HighScoresPage.vue');
 const ProfilePage = () => import('@/views/ProfilePage.vue');
 const FriendsPage = () => import('@/views/FriendsPage.vue');
 const ChallengesPage = () => import('@/views/ChallengesPage.vue');
+const EventsPage = () => import('@/views/EventsPage.vue');
+const EventDetailPage = () => import('@/views/EventDetailPage.vue');
+const MatchmakingPage = () => import('@/views/MatchmakingPage.vue');
 
 const routes: RouteRecordRaw[] = [
   {
@@ -47,6 +50,21 @@ const routes: RouteRecordRaw[] = [
     path: '/challenges',
     name: 'Challenges',
     component: ChallengesPage,
+  },
+  {
+    path: '/events',
+    name: 'Events',
+    component: EventsPage,
+  },
+  {
+    path: '/events/:eventId',
+    name: 'EventDetail',
+    component: EventDetailPage,
+  },
+  {
+    path: '/matchmaking',
+    name: 'Matchmaking',
+    component: MatchmakingPage,
   },
 ];
 
