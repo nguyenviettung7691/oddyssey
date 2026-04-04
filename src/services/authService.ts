@@ -11,6 +11,11 @@ export interface AuthUser {
   avatarUrl?: string;
 }
 
+export interface GoogleSignInResult {
+  user: AuthUser;
+  idToken: string;
+}
+
 interface GoogleCredential extends JwtPayload {
   email?: string;
   name?: string;
@@ -75,12 +80,12 @@ async function loadGoogleScript(): Promise<void> {
   await scriptLoadPromise;
 }
 
-export async function signInWithGoogle(): Promise<AuthUser> {
+export async function signInWithGoogle(): Promise<GoogleSignInResult> {
   await loadGoogleScript();
 
   const clientId = ensureClientId();
 
-  return new Promise<AuthUser>((resolve, reject) => {
+  return new Promise<GoogleSignInResult>((resolve, reject) => {
     if (!window.google?.accounts?.id) {
       reject(new Error('Google Identity Services SDK failed to initialize.'));
       return;
@@ -96,10 +101,13 @@ export async function signInWithGoogle(): Promise<AuthUser> {
 
         const payload = jwtDecode<GoogleCredential>(response.credential);
         resolve({
-          id: payload.sub,
-          email: payload.email ?? 'unknown@oddyssey.app',
-          displayName: payload.name ?? 'Oddyssey Player',
-          avatarUrl: payload.picture,
+          user: {
+            id: payload.sub,
+            email: payload.email ?? 'unknown@oddyssey.app',
+            displayName: payload.name ?? 'Oddyssey Player',
+            avatarUrl: payload.picture,
+          },
+          idToken: response.credential,
         });
       },
       auto_select: false,

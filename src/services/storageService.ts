@@ -1,4 +1,6 @@
 ﻿import type { GameRecord, HighScoreEntry } from '@/types/game';
+import { isFirebaseConfigured } from '@/services/firebaseService';
+import { submitScore } from '@/services/leaderboardService';
 
 const STORAGE_KEY = 'oddyssey:game-records';
 
@@ -54,6 +56,12 @@ export function saveGameRecord(record: GameRecord): { isPersonalBest: boolean; i
 
   const personalBest = sortRecords(themeRecords)[0];
   const themeBest = sortRecords(globalThemeRecords)[0];
+
+  if (isFirebaseConfigured()) {
+    submitScore(record).catch((error) => {
+      console.warn('[Oddyssey] Background score submission failed', error);
+    });
+  }
 
   return {
     isPersonalBest: personalBest?.sessionId === record.sessionId,

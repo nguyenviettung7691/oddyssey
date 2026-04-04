@@ -58,7 +58,12 @@
     "noSession": "セッションが見つかりません",
     "noSessionHint": "新しいゲームを始めて結果を確認しましょう。",
     "backToStart": "スタートに戻る",
-    "unknownTheme": "不明なテーマ"
+    "unknownTheme": "不明なテーマ",
+    "challengeResult": "チャレンジ結果",
+    "challengeWon": "勝利！ {score} vs {opponentScore}",
+    "challengeLost": "敗北。 {score} vs {opponentScore}",
+    "challengeTie": "引き分け！ 両者 {score}",
+    "challengeWaiting": "対戦相手のプレイを待っています…"
   },
   "highScores": {
     "title": "ハイスコア",
@@ -66,7 +71,12 @@
     "acrossAll": "全テーマ合計",
     "unknownTheme": "不明なテーマ",
     "noRuns": "このテーマにはまだ記録がありません。最初の一人になろう！",
-    "unknownTime": "不明な時間"
+    "unknownTime": "不明な時間",
+    "local": "ローカル",
+    "global": "グローバル",
+    "friends": "フレンド",
+    "loading": "リーダーボード読み込み中…",
+    "yourRank": "あなたの順位: #{rank}"
   },
   "profile": {
     "title": "プロフィール",
@@ -88,5 +98,48 @@
     "correct": "正解",
     "incorrect": "不正解",
     "skipped": "スキップ"
+  },
+  "friends": {
+    "title": "フレンド",
+    "signInRequired": "ログインが必要です",
+    "signInHint": "Googleでログインしてフレンドを追加・チャレンジしましょう。",
+    "goToProfile": "プロフィールへ",
+    "searchPlaceholder": "名前で検索…",
+    "searchResults": "検索結果",
+    "addFriend": "追加",
+    "pendingRequests": "フレンドリクエスト",
+    "friendsList": "フレンド",
+    "challenge": "チャレンジ",
+    "noFriends": "まだフレンドがいません。プレイヤーを検索して追加しましょう！",
+    "requestSent": "フレンドリクエストを送信しました！",
+    "requestAccepted": "フレンドリクエストを承認しました！",
+    "friendRemoved": "フレンドを削除しました。",
+    "challengeSent": "チャレンジを送信しました！",
+    "selectTheme": "チャレンジのテーマを選択",
+    "cancel": "キャンセル"
+  },
+  "challenges": {
+    "title": "チャレンジ",
+    "signInRequired": "ログインが必要です",
+    "signInHint": "Googleでログインしてフレンドにチャレンジしましょう。",
+    "goToProfile": "プロフィールへ",
+    "incoming": "受信チャレンジ",
+    "active": "進行中のチャレンジ",
+    "completed": "完了済み",
+    "sent": "送信済みチャレンジ",
+    "accept": "承認",
+    "decline": "辞退",
+    "playNow": "今すぐプレイ",
+    "waiting": "待機中…",
+    "pendingStatus": "保留中",
+    "vsOpponent": "vs {name}",
+    "won": "勝利",
+    "lost": "敗北",
+    "tie": "引き分け",
+    "expired": "期限切れ",
+    "hoursLeft": "残り{count}時間",
+    "minutesLeft": "残り{count}分",
+    "noChallenges": "まだチャレンジがありません。フレンドにチャレンジしましょう！",
+    "findFriends": "フレンドを見つける"
   }
 }

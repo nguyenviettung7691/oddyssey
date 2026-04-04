@@ -2,11 +2,17 @@
 import { randomUUID } from '@/utils/id';
 import type { AuthUser } from '@/services/authService';
 import { isGoogleConfigured, signInWithGoogle, signOutFromGoogle } from '@/services/authService';
+import {
+  isFirebaseConfigured,
+  signInWithGoogleCredential,
+  firebaseSignOutUser,
+} from '@/services/firebaseService';
 
 const STORAGE_KEY = 'oddyssey:user-profile';
 
 interface PersistedUser extends AuthUser {
   provider: 'google' | 'guest';
+  firebaseUid?: string;
 }
 
 type AuthStatus = 'signed-out' | 'loading' | 'signed-in' | 'error';
@@ -60,6 +66,9 @@ export const useUserStore = defineStore('user', {
     provider(state): PersistedUser['provider'] | 'unknown' {
       return state.user?.provider ?? 'unknown';
     },
+    firebaseUid(state): string | undefined {
+      return state.user?.firebaseUid;
+    },
   },
   actions: {
     hydrateFromStorage(): void {
@@ -79,8 +88,21 @@ export const useUserStore = defineStore('user', {
       this.status = 'loading';
       this.error = null;
       try {
-        const user = await signInWithGoogle();
-        const enriched: PersistedUser = { ...user, provider: 'google' };
+        const result = await signInWithGoogle();
+        const enriched: PersistedUser = { ...result.user, provider: 'google' };
+
+        if (isFirebaseConfigured()) {
+          try {
+            const firebaseUser = await signInWithGoogleCredential(result.idToken);
+            if (firebaseUser) {
+              enriched.firebaseUid = firebaseUser.uid;
+              enriched.id = firebaseUser.uid;
+            }
+          } catch (firebaseError) {
+            console.warn('[Oddyssey] Firebase auth bridging failed, using Google-only auth', firebaseError);
+          }
+        }
+
         this.user = enriched;
         this.status = 'signed-in';
         persistUser(enriched);
@@ -92,6 +114,13 @@ export const useUserStore = defineStore('user', {
     },
     async signOut(): Promise<void> {
       await signOutFromGoogle();
+      if (isFirebaseConfigured()) {
+        try {
+          await firebaseSignOutUser();
+        } catch (error) {
+          console.warn('[Oddyssey] Firebase sign-out failed', error);
+        }
+      }
       this.user = null;
       this.status = 'signed-out';
       this.error = null;

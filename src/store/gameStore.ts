@@ -50,6 +50,7 @@ export const useGameStore = defineStore('game', {
     sessionId: '',
     themeId: '',
     themeLabel: '',
+    challengeId: '' as string | null,
     remainingTime: GAME_DURATION_SECONDS,
     score: 0,
     currentQuestion: null as GameQuestion | null,
@@ -80,6 +81,7 @@ export const useGameStore = defineStore('game', {
       this.sessionId = '';
       this.themeId = '';
       this.themeLabel = '';
+      this.challengeId = null;
       this.remainingTime = GAME_DURATION_SECONDS;
       this.score = 0;
       this.currentQuestion = null;
@@ -95,7 +97,7 @@ export const useGameStore = defineStore('game', {
       this.error = null;
       this.currentQuestionCardsUsed = new Set();
     },
-    async startGame(themeId: string): Promise<void> {
+    async startGame(themeId: string, challengeId?: string): Promise<void> {
       const theme = coreThemes.find((item) => item.id === themeId);
       if (!theme) {
         throw new Error(`Theme with id ${themeId} not found.`);
@@ -106,6 +108,7 @@ export const useGameStore = defineStore('game', {
       this.sessionId = randomUUID();
       this.themeId = theme.id;
       this.themeLabel = theme.label;
+      this.challengeId = challengeId ?? null;
       this.startedAt = new Date().toISOString();
 
       await this.fetchNextQuestion();
