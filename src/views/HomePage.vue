@@ -4,6 +4,14 @@
       <ion-toolbar color="dark">
         <ion-title>{{ $t('app.title') }}</ion-title>
         <ion-buttons slot="end">
+          <ion-button v-if="firebaseReady && userStore.isAuthenticated" router-link="/friends" fill="clear">
+            <ion-icon slot="icon-only" :icon="peopleOutline" />
+            <ion-badge v-if="notificationStore.friendsBadge > 0" color="danger" class="nav-badge">{{ notificationStore.friendsBadge }}</ion-badge>
+          </ion-button>
+          <ion-button v-if="firebaseReady && userStore.isAuthenticated" router-link="/challenges" fill="clear">
+            <ion-icon slot="icon-only" :icon="flashOutline" />
+            <ion-badge v-if="notificationStore.challengesBadge > 0" color="danger" class="nav-badge">{{ notificationStore.challengesBadge }}</ion-badge>
+          </ion-button>
           <ion-button router-link="/highscores" fill="clear">
             <ion-icon slot="icon-only" :icon="trophyOutline" />
           </ion-button>
@@ -60,6 +68,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import {
+  IonBadge,
   IonButtons,
   IonButton,
   IonCard,
@@ -78,14 +87,18 @@ import {
   IonToolbar,
 } from '@ionic/vue';
 import { useRouter } from 'vue-router';
-import { trophyOutline, personCircleOutline, sparklesOutline } from 'ionicons/icons';
+import { trophyOutline, personCircleOutline, sparklesOutline, peopleOutline, flashOutline } from 'ionicons/icons';
 import { coreThemes, upcomingThemesPlaceholders } from '@/data/themes';
 import ThemePicker from '@/components/ThemePicker.vue';
 import { useUserStore } from '@/store/userStore';
+import { useNotificationStore } from '@/store/notificationStore';
+import { isFirebaseConfigured } from '@/services/firebaseService';
 
 const router = useRouter();
 const userStore = useUserStore();
+const notificationStore = useNotificationStore();
 const selectedTheme = ref<string | null>(coreThemes[0]?.id ?? null);
+const firebaseReady = isFirebaseConfigured();
 
 function begin(): void {
   if (!selectedTheme.value) {
@@ -150,5 +163,15 @@ section h2 {
   position: sticky;
   bottom: 32px;
   background: transparent;
+}
+
+.nav-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 0.6rem;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
 }
 </style>

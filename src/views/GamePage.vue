@@ -83,6 +83,7 @@ const game = useGameStore();
 const totalTime = 60;
 
 const themeId = computed(() => (route.query.theme as string | undefined) ?? game.themeId);
+const challengeId = computed(() => (route.query.challengeId as string | undefined) ?? undefined);
 
 const theme = computed(() => coreThemes.find((item) => item.id === themeId.value));
 
@@ -102,7 +103,7 @@ async function ensureGameStarted(): Promise<void> {
     return;
   }
 
-  await game.startGame(themeId.value);
+  await game.startGame(themeId.value, challengeId.value);
 }
 
 function handleAnswer(optionId: string): void {

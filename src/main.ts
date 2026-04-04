@@ -6,6 +6,11 @@ import App from './App.vue';
 import router from './router';
 import i18n from './i18n';
 import { useUserStore } from '@/store/userStore';
+import { useNotificationStore } from '@/store/notificationStore';
+import { initializeFirebase, isFirebaseConfigured } from '@/services/firebaseService';
+import { ensureUserProfile } from '@/services/friendService';
+import { syncLocalRecords } from '@/services/leaderboardService';
+import { getUserRecords } from '@/services/storageService';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
@@ -29,6 +34,8 @@ import '@ionic/vue/css/palettes/dark.always.css';
 /* Theme variables */
 import './theme/variables.css';
 
+initializeFirebase();
+
 const pinia = createPinia();
 
 const app = createApp(App)
@@ -38,7 +45,43 @@ const app = createApp(App)
   .use(router);
 
 const userStore = useUserStore(pinia);
+const notificationStore = useNotificationStore(pinia);
 userStore.hydrateFromStorage();
+
+if (isFirebaseConfigured() && userStore.isAuthenticated && userStore.user) {
+  notificationStore.startListening(userStore.user.id);
+  ensureUserProfile(
+    userStore.user.id,
+    userStore.user.displayName,
+    userStore.user.email,
+    userStore.user.avatarUrl,
+  ).catch(() => {});
+  const localRecords = getUserRecords(userStore.user.id);
+  syncLocalRecords(userStore.user.id, localRecords).catch(() => {});
+}
+
+userStore.$onAction(({ name, after }) => {
+  if (name === 'signInWithGoogle') {
+    after(() => {
+      if (userStore.user && isFirebaseConfigured()) {
+        notificationStore.startListening(userStore.user.id);
+        ensureUserProfile(
+          userStore.user.id,
+          userStore.user.displayName,
+          userStore.user.email,
+          userStore.user.avatarUrl,
+        ).catch(() => {});
+        const records = getUserRecords(userStore.user.id);
+        syncLocalRecords(userStore.user.id, records).catch(() => {});
+      }
+    });
+  }
+  if (name === 'signOut') {
+    after(() => {
+      notificationStore.stopListening();
+    });
+  }
+});
 
 router.isReady().then(() => {
   app.mount('#app');

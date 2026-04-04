@@ -28,6 +28,26 @@
         </ion-card-content>
       </ion-card>
 
+      <ion-card v-if="challengeResult" class="challenge-card">
+        <ion-card-header>
+          <ion-card-title>{{ $t('results.challengeResult') }}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <template v-if="challengeResult.status === 'completed'">
+            <p v-if="challengeResult.winnerId === userStore.user?.id" class="challenge-won">
+              {{ $t('results.challengeWon', { score: game.score, opponentScore: opponentChallengeScore }) }}
+            </p>
+            <p v-else-if="challengeResult.winnerId === null" class="challenge-tie">
+              {{ $t('results.challengeTie', { score: game.score }) }}
+            </p>
+            <p v-else class="challenge-lost">
+              {{ $t('results.challengeLost', { score: game.score, opponentScore: opponentChallengeScore }) }}
+            </p>
+          </template>
+          <p v-else>{{ $t('results.challengeWaiting') }}</p>
+        </ion-card-content>
+      </ion-card>
+
       <ion-list class="question-list" inset>
         <ion-list-header>{{ $t('results.questionReview') }}</ion-list-header>
         <ion-item v-for="entry in game.questions" :key="entry.question.id">
@@ -88,7 +108,8 @@ import { coreThemes } from '@/data/themes';
 import { useGameStore } from '@/store/gameStore';
 import { useUserStore } from '@/store/userStore';
 import { saveGameRecord } from '@/services/storageService';
-import type { GameRecord, PlayedQuestion, PowerCardType, PowerCardState } from '@/types/game';
+import { submitChallengeScore, getChallengeDetails } from '@/services/challengeService';
+import type { GameRecord, PlayedQuestion, PowerCardType, PowerCardState, Challenge } from '@/types/game';
 
 const { t } = useI18n();
 const router = useRouter();
@@ -99,6 +120,7 @@ const highScoreUpdated = ref(false);
 const themeTop = ref(false);
 const saveState = ref<'idle' | 'saved' | 'error' | 'skipped'>('idle');
 const saveError = ref('');
+const challengeResult = ref<Challenge | null>(null);
 
 const hasSession = computed(() => game.status === 'finished' && game.questions.length > 0);
 
@@ -107,6 +129,12 @@ const themeLabel = computed(
 );
 
 const isAuthenticated = computed(() => userStore.isAuthenticated);
+
+const opponentChallengeScore = computed(() => {
+  if (!challengeResult.value || !userStore.user?.id) return 0;
+  const c = challengeResult.value;
+  return c.challengerId === userStore.user.id ? c.challengedScore : c.challengerScore;
+});
 
 function badgeColor(outcome: PlayedQuestion['outcome']): 'success' | 'danger' | 'warning' {
   switch (outcome) {
@@ -183,6 +211,23 @@ async function persistResult(): Promise<void> {
     highScoreUpdated.value = outcome.isPersonalBest;
     themeTop.value = outcome.isThemeBest;
     saveState.value = 'saved';
+
+    if (game.challengeId && userStore.user?.id) {
+      try {
+        await submitChallengeScore(
+          game.challengeId,
+          userStore.user.id,
+          game.score,
+          game.sessionId,
+        );
+        const details = await getChallengeDetails(game.challengeId);
+        if (details) {
+          challengeResult.value = details;
+        }
+      } catch (challengeError) {
+        console.warn('[Oddyssey] Failed to submit challenge score', challengeError);
+      }
+    }
   } catch (error) {
     saveState.value = 'error';
     saveError.value = error instanceof Error ? error.message : 'Unable to save your run.';
@@ -244,5 +289,25 @@ onMounted(() => {
   justify-content: center;
   gap: 1rem;
   text-align: center;
+}
+
+.challenge-card {
+  background: rgba(24, 24, 24, 0.9);
+  text-align: center;
+}
+
+.challenge-won {
+  color: var(--ion-color-success);
+  font-weight: 600;
+}
+
+.challenge-lost {
+  color: var(--ion-color-danger);
+  font-weight: 600;
+}
+
+.challenge-tie {
+  color: var(--ion-color-warning);
+  font-weight: 600;
 }
 </style>

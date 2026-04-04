@@ -58,7 +58,12 @@
     "noSession": "No session found",
     "noSessionHint": "Start a new run to see your results summary.",
     "backToStart": "Back to start",
-    "unknownTheme": "Unknown Theme"
+    "unknownTheme": "Unknown Theme",
+    "challengeResult": "Challenge Result",
+    "challengeWon": "You won! {score} vs {opponentScore}",
+    "challengeLost": "You lost. {score} vs {opponentScore}",
+    "challengeTie": "It's a tie! Both scored {score}",
+    "challengeWaiting": "Waiting for opponent to play…"
   },
   "highScores": {
     "title": "High Scores",
@@ -66,7 +71,12 @@
     "acrossAll": "Across All Themes",
     "unknownTheme": "Unknown Theme",
     "noRuns": "No runs logged for this theme yet. Be the first!",
-    "unknownTime": "Unknown time"
+    "unknownTime": "Unknown time",
+    "local": "Local",
+    "global": "Global",
+    "friends": "Friends",
+    "loading": "Loading leaderboard…",
+    "yourRank": "Your rank: #{rank}"
   },
   "profile": {
     "title": "Profile",
@@ -88,5 +98,48 @@
     "correct": "correct",
     "incorrect": "incorrect",
     "skipped": "skipped"
+  },
+  "friends": {
+    "title": "Friends",
+    "signInRequired": "Sign in required",
+    "signInHint": "Sign in with Google to add friends and challenge them.",
+    "goToProfile": "Go to Profile",
+    "searchPlaceholder": "Search by display name…",
+    "searchResults": "Search Results",
+    "addFriend": "Add",
+    "pendingRequests": "Friend Requests",
+    "friendsList": "Friends",
+    "challenge": "Challenge",
+    "noFriends": "No friends yet. Search for players to add them!",
+    "requestSent": "Friend request sent!",
+    "requestAccepted": "Friend request accepted!",
+    "friendRemoved": "Friend removed.",
+    "challengeSent": "Challenge sent!",
+    "selectTheme": "Select Theme for Challenge",
+    "cancel": "Cancel"
+  },
+  "challenges": {
+    "title": "Challenges",
+    "signInRequired": "Sign in required",
+    "signInHint": "Sign in with Google to challenge friends.",
+    "goToProfile": "Go to Profile",
+    "incoming": "Incoming Challenges",
+    "active": "Active Challenges",
+    "completed": "Completed",
+    "sent": "Sent Challenges",
+    "accept": "Accept",
+    "decline": "Decline",
+    "playNow": "Play Now",
+    "waiting": "Waiting…",
+    "pendingStatus": "Pending",
+    "vsOpponent": "vs {name}",
+    "won": "Won",
+    "lost": "Lost",
+    "tie": "Tie",
+    "expired": "Expired",
+    "hoursLeft": "{count}h left",
+    "minutesLeft": "{count}m left",
+    "noChallenges": "No challenges yet. Challenge a friend to get started!",
+    "findFriends": "Find Friends"
   }
 }

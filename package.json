@@ -19,6 +19,7 @@
     "@capacitor/status-bar": "7.0.3",
     "@ionic/vue": "^8.0.0",
     "@ionic/vue-router": "^8.0.0",
+    "firebase": "^12.11.0",
     "ionicons": "^7.0.0",
     "jwt-decode": "^4.0.0",
     "pinia": "^3.0.3",
