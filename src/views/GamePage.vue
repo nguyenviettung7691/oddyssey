@@ -85,6 +85,8 @@ const totalTime = 60;
 
 const themeId = computed(() => (route.query.theme as string | undefined) ?? game.themeId);
 const challengeId = computed(() => (route.query.challengeId as string | undefined) ?? undefined);
+const eventId = computed(() => (route.query.eventId as string | undefined) ?? undefined);
+const matchId = computed(() => (route.query.matchId as string | undefined) ?? undefined);
 
 const theme = computed(() => coreThemes.find((item) => item.id === themeId.value));
 
@@ -104,7 +106,7 @@ async function ensureGameStarted(): Promise<void> {
     return;
   }
 
-  await game.startGame(themeId.value, challengeId.value);
+  await game.startGame(themeId.value, challengeId.value, eventId.value, matchId.value);
 }
 
 function handleAnswer(optionId: string): void {

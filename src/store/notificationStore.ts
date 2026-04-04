@@ -13,17 +13,26 @@ export const useNotificationStore = defineStore('notification', {
     pendingFriendRequests: 0,
     pendingChallenges: 0,
     activeChallenges: 0,
+    activeMatchesP1: 0,
+    activeMatchesP2: 0,
+    activeEvents: 0,
     _unsubscribers: [] as Unsubscribe[],
   }),
   getters: {
     totalBadgeCount(state): number {
-      return state.pendingFriendRequests + state.pendingChallenges + state.activeChallenges;
+      return state.pendingFriendRequests + state.pendingChallenges + state.activeChallenges + state.activeMatchesP1 + state.activeMatchesP2;
     },
     friendsBadge(state): number {
       return state.pendingFriendRequests;
     },
     challengesBadge(state): number {
       return state.pendingChallenges + state.activeChallenges;
+    },
+    matchesBadge(state): number {
+      return state.activeMatchesP1 + state.activeMatchesP2;
+    },
+    eventsBadge(state): number {
+      return state.activeEvents;
     },
   },
   actions: {
@@ -39,6 +48,7 @@ export const useNotificationStore = defineStore('notification', {
         return;
       }
 
+      // Friend requests
       const friendRequestsRef = collection(db, 'friendRequests');
       const friendRequestsQuery = query(
         friendRequestsRef,
@@ -53,6 +63,7 @@ export const useNotificationStore = defineStore('notification', {
       });
       this._unsubscribers.push(unsubFriendRequests);
 
+      // Pending challenges
       const challengesRef = collection(db, 'challenges');
 
       const pendingQuery = query(
@@ -67,6 +78,7 @@ export const useNotificationStore = defineStore('notification', {
       });
       this._unsubscribers.push(unsubPending);
 
+      // Active challenges
       const activeQuery = query(
         challengesRef,
         where('status', '==', 'accepted'),
@@ -88,6 +100,45 @@ export const useNotificationStore = defineStore('notification', {
         console.warn('[Oddyssey] Active challenges listener error', error);
       });
       this._unsubscribers.push(unsubActive);
+
+      // Active matches (waiting for this user)
+      const matchesRef = collection(db, 'matches');
+      const matchesAsP1 = query(
+        matchesRef,
+        where('player1Id', '==', userId),
+        where('status', 'in', ['waiting', 'ready']),
+      );
+      const unsubMatchesP1 = onSnapshot(matchesAsP1, (snapshot) => {
+        this.activeMatchesP1 = snapshot.size;
+      }, (error) => {
+        console.warn('[Oddyssey] Matches P1 listener error', error);
+      });
+      this._unsubscribers.push(unsubMatchesP1);
+
+      const matchesAsP2 = query(
+        matchesRef,
+        where('player2Id', '==', userId),
+        where('status', 'in', ['waiting', 'ready']),
+      );
+      const unsubMatchesP2 = onSnapshot(matchesAsP2, (snapshot) => {
+        this.activeMatchesP2 = snapshot.size;
+      }, (error) => {
+        console.warn('[Oddyssey] Matches P2 listener error', error);
+      });
+      this._unsubscribers.push(unsubMatchesP2);
+
+      // Active events
+      const eventsRef = collection(db, 'events');
+      const activeEventsQuery = query(
+        eventsRef,
+        where('status', '==', 'active'),
+      );
+      const unsubEvents = onSnapshot(activeEventsQuery, (snapshot) => {
+        this.activeEvents = snapshot.size;
+      }, (error) => {
+        console.warn('[Oddyssey] Events listener error', error);
+      });
+      this._unsubscribers.push(unsubEvents);
     },
     stopListening(): void {
       this._unsubscribers.forEach((unsub) => unsub());
@@ -95,6 +146,9 @@ export const useNotificationStore = defineStore('notification', {
       this.pendingFriendRequests = 0;
       this.pendingChallenges = 0;
       this.activeChallenges = 0;
+      this.activeMatchesP1 = 0;
+      this.activeMatchesP2 = 0;
+      this.activeEvents = 0;
     },
   },
 });
