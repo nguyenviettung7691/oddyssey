@@ -106,7 +106,7 @@ export function parseGenkitResponse(raw: string): GenkitQuestionResponse | null 
       }
     }
 
-    return { prompt: prompt.slice(0, 120), options };
+    return { prompt: prompt.slice(0, 120), options: options.map((o) => ({ ...o, text: o.text.slice(0, 60) })) };
   } catch {
     console.warn('[Genkit] Failed to parse response as JSON');
     return null;
@@ -126,6 +126,9 @@ function toGameQuestion(
   }));
 
   const oddOption = options.find((o) => o.isOddOneOut);
+  if (!oddOption) {
+    throw new Error('[Genkit] Invalid state: validated response missing odd option');
+  }
 
   return {
     id: questionId,
@@ -134,7 +137,7 @@ function toGameQuestion(
     themeId,
     difficulty,
     options,
-    oddOptionId: oddOption!.id,
+    oddOptionId: oddOption.id,
     source: 'genkit',
     generatedAt: new Date().toISOString(),
   };
@@ -197,9 +200,13 @@ export class GenkitQuestionService {
         }
 
         const json: unknown = await response.json();
-        const result = typeof json === 'object' && json !== null && 'result' in json
-          ? String((json as Record<string, unknown>).result)
-          : JSON.stringify(json);
+        let result: string;
+        if (typeof json === 'object' && json !== null && 'result' in json) {
+          result = String((json as Record<string, unknown>).result);
+        } else {
+          console.warn('[Genkit] Response missing expected "result" field, attempting direct parse');
+          result = JSON.stringify(json);
+        }
 
         const parsed = parseGenkitResponse(result);
         if (!parsed) {
