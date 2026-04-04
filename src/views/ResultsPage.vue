@@ -48,6 +48,24 @@
         </ion-card-content>
       </ion-card>
 
+      <ion-card v-if="game.longestStreak > 0" class="stats-card">
+        <ion-card-header>
+          <ion-card-title>{{ $t('results.performanceStats') }}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="stats-row">
+            <div class="stat-item">
+              <span class="stat-label">{{ $t('results.longestStreak') }}</span>
+              <span class="stat-value">🔥 {{ game.longestStreak }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">{{ $t('results.bestMultiplier') }}</span>
+              <span class="stat-value">{{ $t('results.streakValue', { count: bestMultiplier }) }}</span>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
       <ion-list class="question-list" inset>
         <ion-list-header>{{ $t('results.questionReview') }}</ion-list-header>
         <ion-item v-for="entry in game.questions" :key="entry.question.id">
@@ -60,6 +78,7 @@
             </p>
           </ion-label>
           <ion-badge :color="badgeColor(entry.outcome)">{{ $t(`outcome.${entry.outcome}`) }}</ion-badge>
+          <ion-badge v-if="(entry.streakAtAnswer ?? 0) >= 3" color="tertiary" class="streak-badge">🔥{{ entry.streakAtAnswer }}</ion-badge>
         </ion-item>
       </ion-list>
 
@@ -110,6 +129,7 @@ import { useUserStore } from '@/store/userStore';
 import { saveGameRecord } from '@/services/storageService';
 import { submitChallengeScore, getChallengeDetails } from '@/services/challengeService';
 import type { GameRecord, PlayedQuestion, PowerCardType, PowerCardState, Challenge } from '@/types/game';
+import { comboMultiplierFromStreak } from '@/utils/streak';
 
 const { t } = useI18n();
 const router = useRouter();
@@ -135,6 +155,8 @@ const opponentChallengeScore = computed(() => {
   const c = challengeResult.value;
   return c.challengerId === userStore.user.id ? c.challengedScore : c.challengerScore;
 });
+
+const bestMultiplier = computed(() => comboMultiplierFromStreak(game.longestStreak));
 
 function badgeColor(outcome: PlayedQuestion['outcome']): 'success' | 'danger' | 'warning' {
   switch (outcome) {
@@ -189,6 +211,7 @@ function buildRecord(): GameRecord {
     finishedAt,
     powerCards: clonePowerCards(),
     activeModifiers: { ...game.activeModifiers },
+    longestStreak: game.longestStreak,
     questions: cloneQuestions(),
     userId: userStore.user?.id ?? 'guest',
     userDisplayName: userStore.displayName,
@@ -309,5 +332,39 @@ onMounted(() => {
 .challenge-tie {
   color: var(--ion-color-warning);
   font-weight: 600;
+}
+
+.stats-card {
+  background: rgba(24, 24, 24, 0.9);
+  text-align: center;
+}
+
+.stats-row {
+  display: flex;
+  justify-content: space-around;
+  gap: 1rem;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.stat-label {
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  color: var(--ion-color-medium);
+}
+
+.stat-value {
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.streak-badge {
+  margin-left: 0.3rem;
+  font-size: 0.75rem;
 }
 </style>

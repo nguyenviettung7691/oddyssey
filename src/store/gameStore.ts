@@ -12,6 +12,7 @@ import type {
   PowerCardType,
 } from '@/types/game';
 import { randomUUID } from '@/utils/id';
+import { comboMultiplierFromStreak } from '@/utils/streak';
 
 const GAME_DURATION_SECONDS = 60;
 const INCORRECT_PENALTY_SECONDS = 3;
@@ -53,6 +54,8 @@ export const useGameStore = defineStore('game', {
     challengeId: '' as string | null,
     remainingTime: GAME_DURATION_SECONDS,
     score: 0,
+    currentStreak: 0,
+    longestStreak: 0,
     currentQuestion: null as GameQuestion | null,
     questions: [] as PlayedQuestion[],
     startedAt: '',
@@ -73,6 +76,9 @@ export const useGameStore = defineStore('game', {
     isRunning(state): boolean {
       return state.status === 'running';
     },
+    comboMultiplier(state): number {
+      return comboMultiplierFromStreak(state.currentStreak);
+    },
   },
   actions: {
     resetState(): void {
@@ -84,6 +90,8 @@ export const useGameStore = defineStore('game', {
       this.challengeId = null;
       this.remainingTime = GAME_DURATION_SECONDS;
       this.score = 0;
+      this.currentStreak = 0;
+      this.longestStreak = 0;
       this.currentQuestion = null;
       this.questions = [];
       this.startedAt = '';
@@ -176,10 +184,15 @@ export const useGameStore = defineStore('game', {
       const cardsUsed = Array.from(this.currentQuestionCardsUsed);
 
       if (isCorrect) {
-        const gained = this.activeModifiers.doubleScore ? 2 : 1;
-        this.score += gained;
-      } else if (!this.activeModifiers.timeKeep) {
-        this.remainingTime = Math.max(0, this.remainingTime - INCORRECT_PENALTY_SECONDS);
+        this.currentStreak += 1;
+        this.longestStreak = Math.max(this.longestStreak, this.currentStreak);
+        const basePoints = this.activeModifiers.doubleScore ? 2 : 1;
+        this.score += basePoints * this.comboMultiplier;
+      } else {
+        this.currentStreak = 0;
+        if (!this.activeModifiers.timeKeep) {
+          this.remainingTime = Math.max(0, this.remainingTime - INCORRECT_PENALTY_SECONDS);
+        }
       }
 
       const record: PlayedQuestion = {
@@ -189,6 +202,7 @@ export const useGameStore = defineStore('game', {
         answeredAt: new Date().toISOString(),
         timeRemainingAfter: this.remainingTime,
         powerCardsUsed: cardsUsed,
+        streakAtAnswer: this.currentStreak,
       };
 
       this.questions = [...this.questions, record];
@@ -207,6 +221,7 @@ export const useGameStore = defineStore('game', {
       }
 
       this.remainingTime = Math.max(0, this.remainingTime - SKIP_PENALTY_SECONDS);
+      this.currentStreak = 0;
       const record: PlayedQuestion = {
         question: this.currentQuestion,
         chosenOptionId: null,
@@ -214,6 +229,7 @@ export const useGameStore = defineStore('game', {
         answeredAt: new Date().toISOString(),
         timeRemainingAfter: this.remainingTime,
         powerCardsUsed: Array.from(this.currentQuestionCardsUsed),
+        streakAtAnswer: 0,
       };
 
       this.questions = [...this.questions, record];

@@ -33,7 +33,8 @@
   "hud": {
     "timeLeft": "Time Left",
     "score": "Score",
-    "question": "Question"
+    "question": "Question",
+    "streak": "Streak"
   },
   "powerCard": {
     "swap": "Swap",
@@ -63,7 +64,11 @@
     "challengeWon": "You won! {score} vs {opponentScore}",
     "challengeLost": "You lost. {score} vs {opponentScore}",
     "challengeTie": "It's a tie! Both scored {score}",
-    "challengeWaiting": "Waiting for opponent to play…"
+    "challengeWaiting": "Waiting for opponent to play…",
+    "performanceStats": "Performance Stats",
+    "longestStreak": "Longest Streak",
+    "bestMultiplier": "Best Multiplier",
+    "streakValue": "×{count} combo"
   },
   "highScores": {
     "title": "High Scores",

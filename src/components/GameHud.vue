@@ -14,6 +14,10 @@
           <ion-text color="light" class="hud-label">{{ $t('hud.question') }}</ion-text>
           <ion-text class="hud-value">{{ questionIndex }}</ion-text>
         </div>
+        <div v-if="currentStreak >= 1" class="hud-item">
+          <ion-text color="light" class="hud-label">{{ $t('hud.streak') }}</ion-text>
+          <ion-text class="hud-value streak-value" :key="currentStreak" :style="{ color: accentColor }">🔥{{ currentStreak }}</ion-text>
+        </div>
       </div>
     </ion-card-content>
   </ion-card>
@@ -28,6 +32,7 @@ const props = defineProps<{
   score: number;
   questionCount: number;
   accentColor: string;
+  currentStreak: number;
 }>();
 
 const formattedTime = computed(() => {
@@ -69,5 +74,15 @@ const questionIndex = computed(() => props.questionCount + 1);
 .hud-value {
   font-size: 1.4rem;
   font-weight: 600;
+}
+
+.streak-value {
+  animation: streak-pulse 0.3s ease;
+}
+
+@keyframes streak-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
 }
 </style>

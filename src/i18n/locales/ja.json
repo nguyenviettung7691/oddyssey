@@ -33,7 +33,8 @@
   "hud": {
     "timeLeft": "残り時間",
     "score": "スコア",
-    "question": "問題"
+    "question": "問題",
+    "streak": "連続"
   },
   "powerCard": {
     "swap": "交換",
@@ -63,7 +64,11 @@
     "challengeWon": "勝利！ {score} vs {opponentScore}",
     "challengeLost": "敗北。 {score} vs {opponentScore}",
     "challengeTie": "引き分け！ 両者 {score}",
-    "challengeWaiting": "対戦相手のプレイを待っています…"
+    "challengeWaiting": "対戦相手のプレイを待っています…",
+    "performanceStats": "パフォーマンス統計",
+    "longestStreak": "最長連続正解",
+    "bestMultiplier": "最高倍率",
+    "streakValue": "×{count} コンボ"
   },
   "highScores": {
     "title": "ハイスコア",
