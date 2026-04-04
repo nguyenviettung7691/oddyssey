@@ -25,6 +25,7 @@
           :score="game.score"
           :question-count="game.questions.length"
           :accent-color="accentColor"
+          :current-streak="game.currentStreak"
         />
 
         <ion-spinner v-if="game.isLoadingQuestion || !game.currentQuestion" name="crescent" class="spinner" />

@@ -41,6 +41,7 @@ export interface PlayedQuestion {
   answeredAt: string;
   timeRemainingAfter: number;
   powerCardsUsed: PowerCardType[];
+  streakAtAnswer: number;
 }
 
 export interface PowerCardState {
@@ -66,6 +67,7 @@ export interface GameSessionSnapshot {
   finishedAt?: string;
   powerCards: Record<PowerCardType, PowerCardState>;
   activeModifiers: ActiveModifiers;
+  longestStreak: number;
 }
 
 export interface GameRecord extends GameSessionSnapshot {

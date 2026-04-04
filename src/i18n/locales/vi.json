@@ -33,7 +33,8 @@
   "hud": {
     "timeLeft": "Thời Gian",
     "score": "Điểm",
-    "question": "Câu Hỏi"
+    "question": "Câu Hỏi",
+    "streak": "Chuỗi"
   },
   "powerCard": {
     "swap": "Đổi",
@@ -63,7 +64,11 @@
     "challengeWon": "Bạn thắng! {score} vs {opponentScore}",
     "challengeLost": "Bạn thua. {score} vs {opponentScore}",
     "challengeTie": "Hòa! Cả hai đạt {score}",
-    "challengeWaiting": "Đang chờ đối thủ…"
+    "challengeWaiting": "Đang chờ đối thủ…",
+    "performanceStats": "Thống Kê Hiệu Suất",
+    "longestStreak": "Chuỗi Dài Nhất",
+    "bestMultiplier": "Hệ Số Cao Nhất",
+    "streakValue": "×{count} combo"
   },
   "highScores": {
     "title": "Điểm Cao",
