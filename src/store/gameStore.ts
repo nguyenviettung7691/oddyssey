@@ -12,6 +12,7 @@ import type {
   PowerCardType,
 } from '@/types/game';
 import { randomUUID } from '@/utils/id';
+import { comboMultiplierFromStreak } from '@/utils/streak';
 
 const GAME_DURATION_SECONDS = 60;
 const INCORRECT_PENALTY_SECONDS = 3;
@@ -76,12 +77,7 @@ export const useGameStore = defineStore('game', {
       return state.status === 'running';
     },
     comboMultiplier(state): number {
-      const s = state.currentStreak;
-      if (s >= 10) return 5;
-      if (s >= 7) return 4;
-      if (s >= 5) return 3;
-      if (s >= 3) return 2;
-      return 1;
+      return comboMultiplierFromStreak(state.currentStreak);
     },
   },
   actions: {

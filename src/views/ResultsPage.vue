@@ -129,6 +129,7 @@ import { useUserStore } from '@/store/userStore';
 import { saveGameRecord } from '@/services/storageService';
 import { submitChallengeScore, getChallengeDetails } from '@/services/challengeService';
 import type { GameRecord, PlayedQuestion, PowerCardType, PowerCardState, Challenge } from '@/types/game';
+import { comboMultiplierFromStreak } from '@/utils/streak';
 
 const { t } = useI18n();
 const router = useRouter();
@@ -154,14 +155,6 @@ const opponentChallengeScore = computed(() => {
   const c = challengeResult.value;
   return c.challengerId === userStore.user.id ? c.challengedScore : c.challengerScore;
 });
-
-function comboMultiplierFromStreak(streak: number): number {
-  if (streak >= 10) return 5;
-  if (streak >= 7) return 4;
-  if (streak >= 5) return 3;
-  if (streak >= 3) return 2;
-  return 1;
-}
 
 const bestMultiplier = computed(() => comboMultiplierFromStreak(game.longestStreak));
 
