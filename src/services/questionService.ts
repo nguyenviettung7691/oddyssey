@@ -1,9 +1,23 @@
 ﻿import { coreThemes } from '@/data/themes';
 import { getFallbackQuestion } from '@/data/questionBank';
+import { getFallbackQuestion as getFallbackQuestionVi } from '@/data/questionBank.vi';
+import { getFallbackQuestion as getFallbackQuestionJa } from '@/data/questionBank.ja';
 import type { DifficultyLevel, GameQuestion } from '@/types/game';
 import { GenkitQuestionService } from './genkitService';
 
 const genkit = new GenkitQuestionService();
+
+type GetFallbackFn = typeof getFallbackQuestion;
+
+const fallbackByLocale: Record<string, GetFallbackFn> = {
+  en: getFallbackQuestion,
+  vi: getFallbackQuestionVi,
+  ja: getFallbackQuestionJa,
+};
+
+function getLocalizedFallback(locale: string): GetFallbackFn {
+  return fallbackByLocale[locale] ?? getFallbackQuestion;
+}
 
 function applyUniquenessTracking(
   question: GameQuestion,
@@ -44,6 +58,7 @@ export async function fetchQuestion(
   difficulty: DifficultyLevel,
   seenQuestionIds: Set<string>,
   seenOptionTexts: Set<string>,
+  locale = 'en',
 ): Promise<GameQuestion> {
   const theme = coreThemes.find((item) => item.id === themeId);
 
@@ -53,6 +68,7 @@ export async function fetchQuestion(
     difficulty,
     excludedQuestionSeeds: Array.from(seenQuestionIds),
     excludedOptionTexts: Array.from(seenOptionTexts),
+    locale,
   };
 
   try {
@@ -66,7 +82,8 @@ export async function fetchQuestion(
     console.warn('[Oddyssey] Genkit generation failed, falling back to curated bank.', error);
   }
 
-  const fallback = getFallbackQuestion(themeId, difficulty, seenQuestionIds);
+  const localizedFallback = getLocalizedFallback(locale);
+  const fallback = localizedFallback(themeId, difficulty, seenQuestionIds);
   if (!fallback) {
     throw new Error('Exhausted questions for the selected theme.');
   }
