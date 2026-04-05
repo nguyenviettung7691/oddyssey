@@ -136,12 +136,19 @@ function handleSkip(): void {
   game.skipQuestion();
 }
 
+const powerCardI18nKey: Record<PowerCardType, string> = {
+  swap: 'powerCard.swap',
+  'remove-correct': 'powerCard.removeCorrect',
+  'double-score': 'powerCard.doubleScore',
+  'time-keep': 'powerCard.timeKeep',
+};
+
 function handlePowerCard(card: PowerCardType): void {
   if (!canInteract.value && card !== 'swap') {
     return;
   }
   game.usePowerCard(card);
-  announce(t('accessibility.powerCardUsed', { card: t(`powerCard.${card === 'remove-correct' ? 'removeCorrect' : card === 'double-score' ? 'doubleScore' : card === 'time-keep' ? 'timeKeep' : card}`) }));
+  announce(t('accessibility.powerCardUsed', { card: t(powerCardI18nKey[card]) }));
 }
 
 // Announce score changes
@@ -187,7 +194,7 @@ watch(() => game.remainingTime, (time) => {
 // Announce new question loaded
 watch(() => game.currentQuestion, (question) => {
   if (question && game.status === 'running') {
-    announce(question.prompt);
+    announce(t('hud.question') + ': ' + question.prompt);
   }
 });
 
