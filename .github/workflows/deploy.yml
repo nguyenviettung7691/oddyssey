@@ -30,7 +30,7 @@ jobs:
         run: npx vite build
 
       - name: Deploy to Firebase Hosting (live)
-        if: secrets.FIREBASE_SERVICE_ACCOUNT != ''
+        if: ${{ secrets.FIREBASE_SERVICE_ACCOUNT != '' }}
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
@@ -58,7 +58,7 @@ jobs:
         run: cd functions && npm run build
 
       - name: Deploy Cloud Functions
-        if: secrets.FIREBASE_SERVICE_ACCOUNT != ''
+        if: ${{ secrets.FIREBASE_SERVICE_ACCOUNT != '' }}
         uses: w9jds/firebase-action@v13.22.1
         with:
           args: deploy --only functions
