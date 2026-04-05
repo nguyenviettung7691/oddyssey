@@ -1,6 +1,7 @@
 ﻿import type { GameRecord, HighScoreEntry } from '@/types/game';
 import { isFirebaseConfigured } from '@/services/firebaseService';
 import { submitScore } from '@/services/leaderboardService';
+import { saveGameRecordToIDB, getGameRecordsByUser as getIDBRecordsByUser } from '@/services/offlineDatabase';
 
 const STORAGE_KEY = 'oddyssey:game-records';
 
@@ -51,6 +52,9 @@ export function saveGameRecord(record: GameRecord): { isPersonalBest: boolean; i
 
   writeStorage({ records: nextRecords });
 
+  // Mirror to IndexedDB for larger/more reliable storage
+  saveGameRecordToIDB(record).catch(() => {});
+
   const themeRecords = nextRecords.filter((entry) => entry.themeId === record.themeId && entry.userId === record.userId);
   const globalThemeRecords = nextRecords.filter((entry) => entry.themeId === record.themeId);
 
@@ -72,6 +76,24 @@ export function saveGameRecord(record: GameRecord): { isPersonalBest: boolean; i
 export function getUserRecords(userId: string): GameRecord[] {
   const state = readStorage();
   return sortRecords(state.records.filter((record) => record.userId === userId));
+}
+
+/**
+ * Async version that merges localStorage records with IndexedDB for completeness.
+ * Falls back to localStorage-only if IndexedDB is unavailable.
+ */
+export async function getUserRecordsAsync(userId: string): Promise<GameRecord[]> {
+  const localRecords = getUserRecords(userId);
+  try {
+    const idbRecords = await getIDBRecordsByUser(userId);
+    // Merge: use a Map keyed by sessionId to deduplicate
+    const merged = new Map<string, GameRecord>();
+    for (const r of localRecords) merged.set(r.sessionId, r);
+    for (const r of idbRecords) merged.set(r.sessionId, r);
+    return sortRecords(Array.from(merged.values()));
+  } catch {
+    return localRecords;
+  }
 }
 
 export function listHighScores(themeId: string | 'all', limit = 10): HighScoreEntry[] {

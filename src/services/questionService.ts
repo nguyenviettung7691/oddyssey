@@ -4,6 +4,7 @@ import { getFallbackQuestion as getFallbackQuestionVi } from '@/data/questionBan
 import { getFallbackQuestion as getFallbackQuestionJa } from '@/data/questionBank.ja';
 import type { DifficultyLevel, GameQuestion } from '@/types/game';
 import { GenkitQuestionService } from './genkitService';
+import { getCachedQuestions, cacheQuestion } from './offlineDatabase';
 
 const genkit = new GenkitQuestionService();
 
@@ -76,10 +77,38 @@ export async function fetchQuestion(
     if (aiQuestion) {
       const sanitized = sanitizeQuestion(aiQuestion);
       applyUniquenessTracking(sanitized, seenQuestionIds, seenOptionTexts);
+
+      // Cache the AI-generated question for offline use
+      cacheQuestion({
+        id: sanitized.id,
+        themeId,
+        locale,
+        data: sanitized,
+        cachedAt: Date.now(),
+      }).catch(() => {});
+
       return sanitized;
     }
   } catch (error) {
-    console.warn('[Oddyssey] Genkit generation failed, falling back to curated bank.', error);
+    console.warn('[Oddyssey] Genkit generation failed, trying offline cache.', error);
+
+    // Try IndexedDB cache before falling back to curated bank
+    try {
+      const cached = await getCachedQuestions(themeId, locale);
+      const unseen = cached.filter((c) => !seenQuestionIds.has(c.id));
+      if (unseen.length > 0) {
+        const pick = unseen[Math.floor(Math.random() * unseen.length)];
+        const cachedQuestion = pick.data as GameQuestion;
+        // Validate the cached data has the expected shape
+        if (cachedQuestion && cachedQuestion.id && Array.isArray(cachedQuestion.options)) {
+          const sanitized = sanitizeQuestion(cachedQuestion);
+          applyUniquenessTracking(sanitized, seenQuestionIds, seenOptionTexts);
+          return sanitized;
+        }
+      }
+    } catch {
+      // IndexedDB unavailable — continue to curated fallback
+    }
   }
 
   const localizedFallback = getLocalizedFallback(locale);
