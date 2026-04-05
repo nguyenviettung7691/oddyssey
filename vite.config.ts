@@ -56,11 +56,13 @@ export default defineConfig({
             },
           },
           {
-            urlPattern: /^https:\/\/.*\.firebaseio\.com\/.*/i,
+            urlPattern: ({ url }: { url: URL }) =>
+              url.hostname.endsWith('.firebaseio.com'),
             handler: 'NetworkOnly',
           },
           {
-            urlPattern: /^https:\/\/firestore\.googleapis\.com\/.*/i,
+            urlPattern: ({ url }: { url: URL }) =>
+              url.hostname === 'firestore.googleapis.com',
             handler: 'NetworkOnly',
           },
         ],
