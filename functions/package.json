@@ -6,6 +6,7 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "tsc",
+    "lint": "tsc --noEmit",
     "serve": "npm run build && firebase emulators:start --only functions",
     "deploy": "firebase deploy --only functions"
   },
