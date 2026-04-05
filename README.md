@@ -20,9 +20,10 @@ Authenticated players can preserve runs, revisit results, and compete on server-
 10. [Services & Data Sources](#services--data-sources)
 11. [Theming & UX](#theming--ux)
 12. [Testing & Quality](#testing--quality)
-13. [Capacitor Notes](#capacitor-notes)
-14. [PWA & Offline Support](#pwa--offline-support)
-15. [Roadmap](#roadmap)
+13. [Deployment](#deployment)
+14. [Capacitor Notes](#capacitor-notes)
+15. [PWA & Offline Support](#pwa--offline-support)
+16. [Roadmap](#roadmap)
 
 ---
 
@@ -209,6 +210,7 @@ Routing is handled by `@ionic/vue-router` with `createWebHistory`. All views exc
 - Node.js 18+ (Capacitor 7 and Vite 5 are tested against modern LTS releases).
 - npm 9+ (bundled with recent Node versions).
 - Optional: Ionic CLI (`npm install -g @ionic/cli`) for extra tooling, though not required.
+- Optional: Firebase CLI (`npm install -g firebase-tools`) for local emulators and manual deploys.
 
 ### Install & Run
 
@@ -218,6 +220,14 @@ npm run dev    # Launches Vite dev server with hot reload (default at http://loc
 ```
 
 Open the served URL in a modern browser (Chrome, Edge, Safari, Firefox). Ionic automatically adapts the experience for mobile device viewports.
+
+### Firebase Local Emulators (optional)
+
+If you have the Firebase CLI installed and a Firebase project configured:
+
+```bash
+firebase emulators:start    # Start Firestore, Functions, and Auth emulators
+```
 
 ---
 
@@ -362,11 +372,77 @@ Test scaffolding is in place under `tests/` with example specs for both Vitest a
 
 ---
 
+## Deployment
+
+Oddyssey uses **Firebase** for web hosting and cloud functions, **Capacitor** for Android builds, and **GitHub Actions** for CI/CD.
+
+### Firebase Setup
+
+1. **Create a Firebase project** at [console.firebase.google.com](https://console.firebase.google.com/).
+2. **Enable required services**: Hosting, Cloud Functions, Firestore, and Authentication (Google provider).
+3. **Update `.firebaserc`** — replace `oddyssey-app` with your Firebase project ID:
+   ```json
+   {
+     "projects": {
+       "default": "your-actual-project-id"
+     }
+   }
+   ```
+4. **Generate a service account key** for CI/CD:
+   - Go to Firebase Console → Project Settings → Service Accounts
+   - Click "Generate new private key"
+   - Add the JSON content as a GitHub repository secret named `FIREBASE_SERVICE_ACCOUNT`
+   - Add your project ID as a GitHub repository variable named `FIREBASE_PROJECT_ID`
+
+### Manual Deployment
+
+```bash
+# Deploy web app to Firebase Hosting
+npm run build && firebase deploy --only hosting
+
+# Deploy Cloud Functions
+cd functions && npm run build && firebase deploy --only functions
+
+# Deploy everything (hosting + functions + firestore rules)
+npm run build && firebase deploy
+
+# Build Android debug APK (requires Android SDK + JDK 17)
+npm run cap:android:build-debug
+# APK output: android/app/build/outputs/apk/debug/app-debug.apk
+```
+
+### CI/CD Pipeline (GitHub Actions)
+
+Three workflows automate the entire deployment lifecycle:
+
+| Workflow | Trigger | What it does |
+|----------|---------|-------------|
+| **CI** (`.github/workflows/ci.yml`) | Pull request to `main` | Lint → type-check → unit test → build → deploy preview to Firebase Hosting. Comments a preview URL on the PR. |
+| **Deploy** (`.github/workflows/deploy.yml`) | Push to `main` | Deploys web app to Firebase Hosting (live) and Cloud Functions to production. |
+| **Android Build** (`.github/workflows/android-build.yml`) | Push to `main` + manual trigger | Builds a debug APK via Capacitor + Gradle. Uploads the APK as a downloadable GitHub Actions artifact. |
+
+#### Required Secrets & Variables
+
+| Name | Type | Purpose |
+|------|------|---------|
+| `FIREBASE_SERVICE_ACCOUNT` | Secret | Service account JSON key for Firebase CLI authentication |
+| `FIREBASE_PROJECT_ID` | Variable | Firebase project ID used by deployment actions |
+
+#### Downloading the Android APK
+
+1. Go to the repository's **Actions** tab.
+2. Select the **Android Debug APK Build** workflow.
+3. Click on the latest successful run.
+4. Download the `app-debug-apk` artifact from the **Artifacts** section.
+5. Transfer the APK to your Android device and install it (enable "Install from unknown sources").
+
+---
+
 ## Capacitor Notes
 
 - `capacitor.config.ts` is initialized with `appId: com.oddyssey.app`, `appName: Oddyssey`, and `webDir: dist`.
 - Plugins configured: SplashScreen (auto-hide disabled, dark background), StatusBar (dark style), Keyboard (body resize), ScreenOrientation, and Haptics.
-- Run `npx cap add ios` / `npx cap add android` after configuring native SDK prerequisites.
+- The `android/` directory is checked in and tracked by Git for CI builds.
 - The Ionic CLI (`npx ionic capacitor run <platform>`) can streamline debugging once platforms are added.
 - Remember to sync after every web build: `npx cap sync`.
 
@@ -376,11 +452,12 @@ Test scaffolding is in place under `tests/` with example specs for both Vitest a
 # Build web assets and sync to native projects
 npm run cap:build
 
-# Build and open in Xcode
-npm run cap:ios
-
 # Build and open in Android Studio
 npm run cap:android
+
+# Build debug APK directly (no Android Studio needed)
+npm run cap:android:build-debug
+# Output: android/app/build/outputs/apk/debug/app-debug.apk
 ```
 
 ### Generating App Icons & Splash Screens
@@ -539,11 +616,10 @@ Oddyssey ships as a Progressive Web App with full offline capabilities:
 - **Concept:** Background sync queue that automatically uploads game records, challenge results, and friend requests when connectivity returns
 - **Implementation:** Workbox Background Sync plugin or custom queue in IndexedDB with retry logic
 
-#### 6.3 Automated CI/CD Pipeline
+#### ~~6.3 Automated CI/CD Pipeline~~ ✅ Completed
 
-- **Current gap:** No GitHub Actions or CI configuration
-- **Concept:** Automated lint → type-check → unit test → build → deploy pipeline on every PR
-- **Add:** GitHub Actions workflow, preview deployments for PRs, automated Capacitor builds
+- ~~**Current gap:** No GitHub Actions or CI configuration~~
+- **Implemented:** GitHub Actions workflows for CI (PR checks + preview deploy), production deploy (Hosting + Functions), and Android debug APK builds. See [Deployment](#deployment).
 
 ---
 
