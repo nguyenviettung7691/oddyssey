@@ -21,7 +21,8 @@ Authenticated players can preserve runs, revisit results, and compete on theme-s
 11. [Theming & UX](#theming--ux)
 12. [Testing & Quality](#testing--quality)
 13. [Capacitor Notes](#capacitor-notes)
-14. [Roadmap Ideas](#roadmap-ideas)
+14. [PWA & Offline Support](#pwa--offline-support)
+15. [Roadmap Ideas](#roadmap-ideas)
 
 ---
 
@@ -258,10 +259,72 @@ Test scaffolding is in place under `tests/` with example specs for both Vitest a
 
 ## Capacitor Notes
 
-- `capacitor.config.ts` is initialized with `appId: com.oddyssey.app`, `appName: oddyssey-app`, and `webDir: dist`.
+- `capacitor.config.ts` is initialized with `appId: com.oddyssey.app`, `appName: Oddyssey`, and `webDir: dist`.
+- Plugins configured: SplashScreen (auto-hide disabled, dark background), StatusBar (dark style), Keyboard (body resize).
 - Run `npx cap add ios` / `npx cap add android` after configuring native SDK prerequisites.
 - The Ionic CLI (`npx ionic capacitor run <platform>`) can streamline debugging once platforms are added.
 - Remember to sync after every web build: `npx cap sync`.
+
+### Building for Native Platforms
+
+```bash
+# Build web assets and sync to native projects
+npm run cap:build
+
+# Build and open in Xcode
+npm run cap:ios
+
+# Build and open in Android Studio
+npm run cap:android
+```
+
+### Generating App Icons & Splash Screens
+
+Source images are located in `resources/`:
+- `resources/icon.png` (1024×1024) — app icon source
+- `resources/splash.png` (2732×2732) — splash screen source
+
+Replace these with your branded assets, then regenerate:
+
+```bash
+npm run generate:assets
+```
+
+This uses `@capacitor/assets` to produce all required sizes for iOS and Android.
+
+### Prerequisites for Native Builds
+
+- **iOS**: macOS with Xcode 15+, CocoaPods (`sudo gem install cocoapods`)
+- **Android**: Android Studio, JDK 17+, Android SDK (API 33+)
+
+---
+
+## PWA & Offline Support
+
+Oddyssey ships as a Progressive Web App with full offline capabilities:
+
+### Service Worker
+
+- Powered by `vite-plugin-pwa` with Workbox runtime caching.
+- **App shell** (HTML, JS, CSS, images): pre-cached during build for instant offline loading.
+- **Google Fonts/CDN**: CacheFirst with 30-day expiration.
+- **Genkit API calls**: NetworkFirst with 24-hour offline fallback cache.
+- **Firebase/Firestore**: NetworkOnly (real-time data is never stale-cached).
+- Service worker auto-updates when new builds are deployed.
+- On native platforms (iOS/Android), the service worker is disabled — Capacitor handles asset bundling.
+
+### Offline Data (IndexedDB)
+
+- AI-generated questions are cached in IndexedDB for offline play.
+- Game records are mirrored to IndexedDB alongside localStorage for more reliable persistence.
+- User preferences are stored in IndexedDB with localStorage as a synchronous fallback.
+- The `useOfflineStatus` composable provides a reactive `isOffline` ref for UI feedback.
+
+### PWA Manifest
+
+- `public/manifest.json` defines the installable PWA configuration.
+- App icons in `public/icons/` range from 72×72 to 512×512.
+- Standalone display mode with portrait orientation.
 
 ---
 
@@ -273,6 +336,6 @@ Test scaffolding is in place under `tests/` with example specs for both Vitest a
 - Track streaks/combo multipliers for extra scoring depth.
 - Offer cooperative/versus multiplayer or weekly events.
 - Enhance accessibility (reduce motion option, screen reader labels, haptics tuning).
-- Ship native mobile binaries with custom splash screens and offline caching.
+- ~~Ship native mobile binaries with custom splash screens and offline caching.~~ ✅ — Capacitor plugins configured (SplashScreen, StatusBar, Keyboard, ScreenOrientation), PWA manifest + service worker with Workbox caching, IndexedDB offline data layer, app icons and splash screen assets.
 
 Feel free to adapt these ideas to suit the product vision. Oddyssey's modular architecture is designed to grow as the content library, player base, and platform coverage expand.
