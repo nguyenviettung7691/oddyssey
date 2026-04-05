@@ -22,6 +22,7 @@ Authenticated players can preserve runs, revisit results, and compete on server-
 12. [Testing & Quality](#testing--quality)
 13. [Capacitor Notes](#capacitor-notes)
 14. [PWA & Offline Support](#pwa--offline-support)
+15. [Roadmap](#roadmap)
 
 ---
 
@@ -429,6 +430,120 @@ Oddyssey ships as a Progressive Web App with full offline capabilities:
 - `public/manifest.json` defines the installable PWA configuration.
 - App icons in `public/icons/` range from 72×72 to 512×512.
 - Standalone display mode with portrait orientation.
+
+---
+
+## Roadmap
+
+### 🔴 Phase 1 — Quality & Reliability (High Priority, Low Risk)
+
+#### 1.1 Test Coverage Expansion
+
+- **Current gap:** Only skeleton tests exist (1 unit, 1 e2e)
+- **Unit tests needed:** gameStore logic (scoring, streaks, power cards, difficulty ramp), streak utility, question service (fallback chain: Genkit → cache → bank), offline database operations
+- **E2E tests needed:** Full game flow (start → play → results), authentication flow (Google + guest), multiplayer matchmaking → lobby → game, friend request lifecycle, challenge send/accept/complete
+- **Impact:** Prevents regressions as features grow; enables confident refactoring
+
+#### 1.2 Error Monitoring & Analytics
+
+- **Add:** Firebase Crashlytics (mobile) + Firebase Analytics or Sentry (web) for error tracking
+- **Track:** Game completion rates, question answer distribution, power card usage patterns, theme popularity, session duration, funnel drop-offs (home → game → results)
+- **Impact:** Data-driven product decisions; proactively catch production issues
+
+#### 1.3 Cloud Functions Rate Limiting
+
+- **Current gap:** No rate limiting on callable functions (`getLeaderboard`, `searchUsers`)
+- **Add:** Per-user rate limiting middleware (e.g., 60 requests/minute for search, 10/minute for leaderboard)
+- **Impact:** Prevents abuse and excessive Firebase costs
+
+### 🟡 Phase 2 — Engagement & Retention (Medium Priority, Medium Effort)
+
+#### 2.1 Achievements & Badges System
+
+- **Concept:** Award badges for milestones — "First Perfect Round," "10-Streak Master," "Night Owl (played after midnight)," "Polyglot (played in 3 locales)," "Social Butterfly (10 friends)," "Event Champion"
+- **Implementation:** New `achievementService.ts`, `achievementStore.ts`, `AchievementsPage.vue`, Firestore `achievements` subcollection under users
+- **Impact:** Strong retention driver; gives players long-term goals beyond high scores
+
+#### 2.2 Player Progression & Leveling
+
+- **Concept:** XP system based on games played, scores, streaks, and challenges won. Level-up unlocks new themes, power card upgrades, or cosmetic items
+- **Implementation:** XP calculation in Cloud Functions on game record creation, level thresholds, new progress bar UI on profile page
+- **Impact:** Provides continuous sense of progression; motivation beyond individual scores
+
+#### 2.3 Activity Feed & Social Timeline
+
+- **Concept:** A feed showing friend activity — high scores, achievements unlocked, challenges completed, events joined
+- **Implementation:** New `ActivityFeedPage.vue`, Firestore `activities` collection with fanout writes, real-time subscription
+- **Impact:** Increases social engagement; drives competitive behavior through visibility
+
+### 🟢 Phase 3 — Content & Variety (Medium Priority, Scalable)
+
+#### 3.1 Theme Expansion
+
+- **Current:** 7 themes — add 5-8 more: Movies & TV, Geography, Technology, Sports (general), Food & Cooking, Music (genres), Art & Literature, Mythology
+- **Implementation:** Extend `themes.ts`, add question banks per locale, add theme icons and accent colors
+- **Impact:** Directly increases replayability; appeals to broader audience
+
+#### 3.2 Difficulty Modes
+
+- **Concept:** Beyond the current auto-ramping difficulty, add selectable modes — "Casual" (90s timer, hints), "Standard" (current 60s), "Expert" (30s, no power cards), "Endless" (no timer, survive until 3 wrong)
+- **Implementation:** Extend `GameSessionSnapshot` type with `mode` field, adjust `gameStore` timer/power-card logic per mode
+- **Impact:** Appeals to different player skill levels; adds variety for experienced players
+
+### 🔵 Phase 4 — Multiplayer & Social Expansion (High Effort, High Reward)
+
+#### 4.1 Team/Clan System
+
+- **Concept:** Players form teams (3-10 members) that compete in team events, aggregate scores, and have team leaderboards
+- **Implementation:** Firestore `teams` collection, team management page, team invites, aggregate score Cloud Functions
+- **Impact:** Deepens social bonds; creates another layer of competition
+
+#### 4.2 Social Sharing & Replay
+
+- **Concept:** Generate shareable result cards (image) for social media showing score, streak, theme, and a challenge link
+- **Implementation:** Canvas/SVG-based result image generation, Web Share API integration, deep link to challenge
+- **Impact:** Organic growth through social sharing; viral loop potential
+
+### 🟣 Phase 5 — Monetization & Platform (Strategic)
+
+#### 5.1 Cosmetic Customization
+
+- **Concept:** Unlockable/purchasable avatar frames, question card skins, power card visual effects, victory animations
+- **Implementation:** Firestore `inventory` subcollection, cosmetics catalog, equipped items in user profile, render pipeline for custom visuals
+- **Impact:** Non-pay-to-win monetization; self-expression for players
+
+#### 5.2 Push Notifications
+
+- **Current gap:** No push notification support
+- **Concept:** Notify for friend requests, challenge invites, event starts, daily challenge reminders, match found
+- **Implementation:** Firebase Cloud Messaging (FCM), Capacitor Push Notifications plugin, notification preferences page
+- **Impact:** Re-engagement for inactive users; time-sensitive feature awareness
+
+#### 5.3 Admin Dashboard
+
+- **Concept:** Web-based admin panel for managing themes, reviewing submitted questions, moderating reports, viewing analytics, managing events manually
+- **Implementation:** Separate Vue app or Firebase Admin SDK integration, role-based access control
+- **Impact:** Operational efficiency; enables non-developer content management
+
+### 🔧 Phase 6 — Technical Excellence (Ongoing)
+
+#### 6.1 Performance Optimization
+
+- **Code splitting audit:** Analyze bundle size (currently triggers 500kB warning), split heavy dependencies (firebase, ionicons)
+- **Image optimization:** Lazy-load theme icons, use WebP format, implement responsive images
+- **Prefetching:** Preload likely next routes (e.g., GamePage when on HomePage)
+
+#### 6.2 Offline Sync Queue
+
+- **Current gap:** Offline game records are stored but not automatically synced
+- **Concept:** Background sync queue that automatically uploads game records, challenge results, and friend requests when connectivity returns
+- **Implementation:** Workbox Background Sync plugin or custom queue in IndexedDB with retry logic
+
+#### 6.3 Automated CI/CD Pipeline
+
+- **Current gap:** No GitHub Actions or CI configuration
+- **Concept:** Automated lint → type-check → unit test → build → deploy pipeline on every PR
+- **Add:** GitHub Actions workflow, preview deployments for PRs, automated Capacitor builds
 
 ---
 
