@@ -2,7 +2,7 @@
 
 Oddyssey is a high-tempo "Odd One Out" quiz experience built with Ionic 8, Capacitor 7, and Vue 3.
 Players race through a 60-second round, selecting the intentionally incorrect option from four answers while managing power cards, climbing difficulty tiers, and banking streaks.
-Authenticated players can preserve runs, revisit results, and compete on theme-specific leaderboards.
+Authenticated players can preserve runs, revisit results, and compete on server-backed leaderboards.
 
 ---
 
@@ -22,22 +22,29 @@ Authenticated players can preserve runs, revisit results, and compete on theme-s
 12. [Testing & Quality](#testing--quality)
 13. [Capacitor Notes](#capacitor-notes)
 14. [PWA & Offline Support](#pwa--offline-support)
-15. [Roadmap Ideas](#roadmap-ideas)
 
 ---
 
 ## Features
 
 - **Fast-paced 60s rounds** with adaptive difficulty and no per-question timer.
-- **Theme selection** — three core themes (World Football, Anime Universe, Science & Discovery) plus placeholders for upcoming packs (Space Explorers, Street Foods).
-- **Genkit AI integration scaffold** with a curated fallback question bank ensuring distinct prompts and option phrasing.
+- **Seven theme packs** — World Football, Anime Universe, Science & Discovery, Space Explorers, Street Foods, World History, and Pop Music.
+- **Genkit AI integration** with a deployed flow endpoint for dynamic question generation, plus a curated fallback question bank ensuring distinct prompts and option phrasing. Includes a 10-second timeout, automatic retry, response validation, and graceful fallback.
 - **Penalty mechanics**: wrong answers subtract 3 seconds, skips subtract 1 second, keeping pressure high.
 - **Four single-use power cards** per game for strategic control (swap, remove, double score, safeguard time).
-- **Detailed results summary** listing every question, the actual odd option, and the player's choice.
-- **Local persistence & high scores** using browser storage, separated by theme and global boards.
-- **Authentication shell** with Google Identity Services + guest alias mode; signed-in users retain histories.
+- **Streak/combo multiplier system** rewarding consecutive correct answers with escalating score multipliers (×1 → ×5).
+- **Detailed results summary** listing every question, the actual odd option, player's choice, and streak at each answer.
+- **Server-backed leaderboards** via Firebase Firestore with local storage fallback for offline play.
+- **Social features** — friend system with search, requests, and management; friend challenges with 24-hour expiry and real-time score tracking.
+- **Versus & cooperative multiplayer** with real-time matchmaking, live opponent state broadcasting, and lobby/ready system.
+- **Weekly events** with rotating themes, standings, and scheduled Cloud Functions for event creation.
+- **Internationalization** — full UI translations and locale-specific question banks for English, Vietnamese, and Japanese.
+- **Accessibility** — reduce-motion support, screen reader announcements via aria-live regions, configurable haptic feedback, and ARIA labels on all interactive components.
+- **Authentication** with Google Identity Services + Firebase Auth bridge + guest alias mode; signed-in users retain histories.
 - **Responsive dark interface** leveraging Ionic 8 components with a warm accent and clean, flat UI.
-- **Lazy-loaded routes** for Game, Results, High Scores, and Profile pages to optimize initial load time.
+- **PWA & offline support** — service worker with Workbox caching, IndexedDB offline data layer, installable manifest.
+- **Native mobile ready** — Capacitor plugins for splash screen, status bar, keyboard, screen orientation, and haptics.
+- **Lazy-loaded routes** for all pages except Home to optimize initial load time.
 
 ---
 
@@ -45,10 +52,11 @@ Authenticated players can preserve runs, revisit results, and compete on theme-s
 
 - Start on the **Home** screen, choose a theme, and launch a run.
 - Difficulty escalates automatically as you progress through questions: *easy* (questions 1–3) → *medium* (4–7) → *hard* (8–12) → *expert* (13+).
-- Selecting the **odd one out** yields 1 point (2 if a Double Score card is active).
-- Incorrect answers shave 3 seconds (unless Time Keep is active); skipping costs 1 second.
+- Selecting the **odd one out** yields base points (1, or 2 if a Double Score card is active) multiplied by a combo multiplier that scales with your consecutive correct answer streak (×1 at 0–2, ×2 at 3–4, ×3 at 5–6, ×4 at 7–9, ×5 at 10+).
+- Incorrect answers shave 3 seconds (unless Time Keep is active) and reset your streak; skipping costs 1 second and resets your streak.
 - The engine keeps serving distinct questions and options until the 60-second timer expires.
-- When time's up, a detailed **Results** view appears with replay options and a prompt to save (if the player is authenticated).
+- When time's up, a detailed **Results** view appears with replay options, streak statistics, and a prompt to save (if the player is authenticated).
+- Players can also compete in **versus or cooperative multiplayer** matches, participate in **weekly events**, or send **friend challenges**.
 
 ---
 
@@ -72,11 +80,15 @@ Active modifiers deactivate after the current question resolves.
 - **Vue 3 + `<script setup>`** — Composition API with TypeScript generics for typed props and emits.
 - **Ionic 8 (`@ionic/vue`)** — mobile-first component library for iOS/Android/Web.
 - **Ionicons 7** — icon set used across theme pickers, difficulty badges, and navigation.
-- **Capacitor 7** — integration scaffold for native iOS and Android builds.
-- **Pinia 3** — state management for game sessions (`gameStore`) and authentication (`userStore`).
+- **Capacitor 7** — native iOS and Android builds with plugins for splash screen, status bar, keyboard, screen orientation, and haptics.
+- **Pinia 3** — state management for game sessions (`gameStore`), authentication (`userStore`), multiplayer (`multiplayerStore`), events (`eventStore`), and notifications (`notificationStore`).
+- **Firebase 12** — optional backend for authentication (bridged from Google Sign-In), Firestore (leaderboards, friends, challenges, matches, events), and Cloud Functions (matchmaking, weekly event creation, stale cleanup).
 - **Vite 5** — development server, bundler, and legacy browser support via `@vitejs/plugin-legacy`.
 - **Vue Router 4** — client-side routing powered by `@ionic/vue-router` with lazy-loaded views.
+- **vue-i18n 9** — Composition API mode internationalization with English, Vietnamese, and Japanese locale files.
 - **TypeScript 5.6** — strict typing across the entire codebase.
+- **idb 8** — IndexedDB wrapper for offline question caching, game record mirroring, and user preference storage.
+- **vite-plugin-pwa** — Workbox-powered service worker for offline-first PWA capabilities.
 - **JWT Decode 4** — parsing Google Identity credentials on the client.
 
 ---
@@ -84,46 +96,86 @@ Active modifiers deactivate after the current question resolves.
 ## Project Structure
 
 ```
-├─ public/                    # Static assets served as-is (favicon.png)
+├─ public/                    # Static assets served as-is (favicon.png, PWA manifest, icons)
 ├─ src/
 │  ├─ components/             # Reusable Ionic components
+│  │  ├─ CoopHud.vue          # Cooperative multiplayer HUD showing teammate stats
 │  │  ├─ CountdownBar.vue     # Visual timer progress bar with animated width
-│  │  ├─ GameHud.vue          # Real-time HUD showing time, score, and question count
+│  │  ├─ EventBanner.vue      # Promotional banner for active weekly events
+│  │  ├─ EventCard.vue        # Card component for event listings
+│  │  ├─ EventCountdown.vue   # Countdown timer for upcoming events
+│  │  ├─ EventLeaderboard.vue # Standings table for event participants
+│  │  ├─ GameHud.vue          # Real-time HUD showing time, score, streak, and question count
+│  │  ├─ MatchResultModal.vue # Modal displaying multiplayer match outcomes
+│  │  ├─ OpponentHud.vue      # Live opponent status during versus matches
 │  │  ├─ PowerCardsStrip.vue  # Row of four power card buttons with usage tracking
 │  │  ├─ QuestionCard.vue     # Question prompt with four options and difficulty badge
-│  │  └─ ThemePicker.vue      # Theme selection grid with upcoming previews
+│  │  ├─ ScreenReaderAnnouncer.vue # Aria-live region for screen reader announcements
+│  │  ├─ ThemePicker.vue      # Theme selection grid
+│  │  └─ VersusLobby.vue      # Multiplayer lobby with ready system
+│  ├─ composables/            # Vue Composition API composables
+│  │  ├─ useAnnouncer.ts      # Screen reader announcement helper (polite/assertive)
+│  │  ├─ useHaptics.ts        # Capacitor haptic feedback with enable/disable toggle
+│  │  ├─ useOfflineStatus.ts  # Reactive online/offline status detection
+│  │  └─ useReducedMotion.ts  # Reduced motion preference (OS + user override)
 │  ├─ data/
-│  │  ├─ themes.ts            # Theme metadata (3 core + 2 upcoming placeholders)
-│  │  └─ questionBank.ts      # Curated fallback questions (~45 across 3 themes × 4 difficulties)
+│  │  ├─ themes.ts            # Theme metadata (7 themes with accent colors and difficulty ramps)
+│  │  ├─ questionBank.ts      # Curated fallback questions (English)
+│  │  ├─ questionBank.vi.ts   # Curated fallback questions (Vietnamese)
+│  │  └─ questionBank.ja.ts   # Curated fallback questions (Japanese)
+│  ├─ i18n/
+│  │  ├─ index.ts             # vue-i18n plugin setup with locale detection and persistence
+│  │  └─ locales/             # Translation files (en.json, vi.json, ja.json)
 │  ├─ router/
 │  │  └─ index.ts             # Route definitions with lazy-loaded views
 │  ├─ services/
 │  │  ├─ authService.ts       # Google Identity Services SDK loading + sign-in/out helpers
-│  │  ├─ genkitService.ts     # Prompt builder & hook for Genkit AI (currently returns null)
+│  │  ├─ challengeService.ts  # Friend challenge creation, acceptance, scoring, and real-time subscriptions
+│  │  ├─ eventService.ts      # Weekly event lifecycle, standings, and real-time subscriptions
+│  │  ├─ firebaseService.ts   # Optional Firebase initialization with graceful degradation
+│  │  ├─ friendService.ts     # Friend requests, search, and relationship management
+│  │  ├─ genkitService.ts     # Prompt builder, Genkit flow API caller, response validation, retry, and fallback
+│  │  ├─ leaderboardService.ts# Server-backed leaderboards via Firestore with local storage fallback
+│  │  ├─ matchService.ts      # Real-time versus/cooperative match management with Firestore listeners
+│  │  ├─ offlineDatabase.ts   # IndexedDB wrapper (questions cache, game records mirror, user preferences)
 │  │  ├─ questionService.ts   # Question orchestration (AI + fallback) with uniqueness guards
 │  │  └─ storageService.ts    # localStorage wrapper for game records & high score views
 │  ├─ store/
-│  │  ├─ gameStore.ts         # Session lifecycle, timers, scoring, power cards, difficulty ramp
-│  │  └─ userStore.ts         # Auth status, localStorage persistence, guest alias support
+│  │  ├─ eventStore.ts        # Weekly event state and subscriptions
+│  │  ├─ gameStore.ts         # Session lifecycle, timers, scoring, power cards, streaks, difficulty ramp
+│  │  ├─ multiplayerStore.ts  # Matchmaking, match state, opponent tracking, and result computation
+│  │  ├─ notificationStore.ts # Real-time notification subscriptions for challenges, friends, and events
+│  │  └─ userStore.ts         # Auth status, Firebase Auth bridge, localStorage persistence, guest alias
 │  ├─ theme/
+│  │  ├─ accessibility.css    # Reduced motion overrides, screen reader utility classes
 │  │  └─ variables.css        # Dark palette, Ionic overrides, accent color (#FF8C42)
 │  ├─ types/
 │  │  └─ game.ts              # Shared interfaces (GameQuestion, PlayedQuestion, PowerCardState, etc.)
 │  ├─ utils/
-│  │  └─ id.ts                # UUID generator with crypto.randomUUID() fallback
+│  │  ├─ id.ts                # UUID generator with crypto.randomUUID() fallback
+│  │  └─ streak.ts            # Combo multiplier tiers (×1–×5) based on streak count
 │  ├─ views/                  # Route-level pages
-│  │  ├─ HomePage.vue         # Theme selection, power cards info, start button
-│  │  ├─ GamePage.vue         # Main gameplay (HUD, question card, countdown, power cards)
-│  │  ├─ ResultsPage.vue      # Post-game summary with question review and save prompt
+│  │  ├─ ChallengesPage.vue   # Incoming, active, and completed friend challenges
+│  │  ├─ EventDetailPage.vue  # Event info, countdown, standings, and join action
+│  │  ├─ EventsPage.vue       # Active, upcoming, and completed weekly events
+│  │  ├─ FriendsPage.vue      # Friend search, requests, list, and challenge initiation
+│  │  ├─ GamePage.vue         # Main gameplay (HUD, question card, countdown, power cards, multiplayer overlays)
 │  │  ├─ HighScoresPage.vue   # Leaderboard with theme/global segment selector
-│  │  └─ ProfilePage.vue      # Auth management, guest alias, recent run history
+│  │  ├─ HomePage.vue         # Theme selection, power cards info, start button, event banners
+│  │  ├─ MatchmakingPage.vue  # Multiplayer mode selection, search, lobby, and ready system
+│  │  ├─ ProfilePage.vue      # Auth management, guest alias, recent runs, accessibility settings, locale picker
+│  │  └─ ResultsPage.vue      # Post-game summary with question review, streak stats, and save prompt
 │  ├─ App.vue                 # Root Ionic shell + Google Sign-In prompt host
-│  └─ main.ts                 # App bootstrap: IonicVue, Pinia, Router, user hydration
+│  └─ main.ts                 # App bootstrap: IonicVue, Pinia, Router, i18n, service worker, user hydration
+├─ functions/
+│  └─ src/
+│     └─ index.ts             # Cloud Functions: matchmaking, weekly event creation, stale match/challenge cleanup
 ├─ tests/
 │  ├─ unit/                   # Vitest unit test scaffold
 │  └─ e2e/                    # Cypress E2E test scaffold with fixtures and support files
-├─ capacitor.config.ts        # Capacitor project metadata (appId, appName, webDir)
-├─ vite.config.ts             # Vite + Vue + legacy plugin configuration, @ path alias
+├─ capacitor.config.ts        # Capacitor project metadata (appId, appName, webDir, plugin configs)
+├─ firestore.rules            # Firestore security rules
+├─ vite.config.ts             # Vite + Vue + legacy + PWA plugin configuration, @ path alias
 └─ package.json               # Scripts, dependencies, and rollup override
 ```
 
@@ -131,16 +183,21 @@ Active modifiers deactivate after the current question resolves.
 
 ## Routes
 
-Routing is handled by `@ionic/vue-router` with `createWebHistory`. Four of five views are lazy-loaded.
+Routing is handled by `@ionic/vue-router` with `createWebHistory`. All views except Home are lazy-loaded.
 
-| Path           | Name        | Component          | Notes                              |
-| -------------- | ----------- | ------------------ | ---------------------------------- |
-| `/`            | —           | —                  | Redirects to `/home`               |
-| `/home`        | Home        | `HomePage.vue`     | Eagerly loaded                     |
-| `/game`        | Game        | `GamePage.vue`     | Lazy-loaded; receives `?theme=<id>` query param |
-| `/results`     | Results     | `ResultsPage.vue`  | Lazy-loaded                        |
-| `/highscores`  | HighScores  | `HighScoresPage.vue` | Lazy-loaded                      |
-| `/profile`     | Profile     | `ProfilePage.vue`  | Lazy-loaded                        |
+| Path              | Name         | Component            | Notes                                              |
+| ----------------- | ------------ | -------------------- | -------------------------------------------------- |
+| `/`               | —            | —                    | Redirects to `/home`                               |
+| `/home`           | Home         | `HomePage.vue`       | Eagerly loaded                                     |
+| `/game`           | Game         | `GamePage.vue`       | Lazy-loaded; receives `?theme=<id>`, optional `?challengeId`, `?eventId`, `?matchId` query params |
+| `/results`        | Results      | `ResultsPage.vue`    | Lazy-loaded                                        |
+| `/highscores`     | HighScores   | `HighScoresPage.vue` | Lazy-loaded                                        |
+| `/profile`        | Profile      | `ProfilePage.vue`    | Lazy-loaded                                        |
+| `/friends`        | Friends      | `FriendsPage.vue`    | Lazy-loaded; friend search, requests, and management |
+| `/challenges`     | Challenges   | `ChallengesPage.vue` | Lazy-loaded; incoming, active, and completed challenges |
+| `/events`         | Events       | `EventsPage.vue`     | Lazy-loaded; active, upcoming, and completed weekly events |
+| `/events/:eventId`| EventDetail  | `EventDetailPage.vue`| Lazy-loaded; event details, standings, and join action |
+| `/matchmaking`    | Matchmaking  | `MatchmakingPage.vue`| Lazy-loaded; multiplayer mode selection, search, and lobby |
 
 ---
 
@@ -170,6 +227,12 @@ Create a `.env` (or `.env.local`) in the project root to expose runtime secrets.
 ```
 VITE_GOOGLE_CLIENT_ID=<your-google-oauth-client-id>
 VITE_GENKIT_API_URL=<your-genkit-flow-endpoint-url>
+VITE_FIREBASE_API_KEY=<your-firebase-api-key>
+VITE_FIREBASE_AUTH_DOMAIN=<your-project.firebaseapp.com>
+VITE_FIREBASE_PROJECT_ID=<your-project-id>
+VITE_FIREBASE_STORAGE_BUCKET=<your-project.appspot.com>
+VITE_FIREBASE_MESSAGING_SENDER_ID=<your-messaging-sender-id>
+VITE_FIREBASE_APP_ID=<your-firebase-app-id>
 ```
 
 ### Google Sign-In (`VITE_GOOGLE_CLIENT_ID`)
@@ -180,9 +243,15 @@ VITE_GENKIT_API_URL=<your-genkit-flow-endpoint-url>
 ### Genkit AI Questions (`VITE_GENKIT_API_URL`)
 
 - Point this to a deployed Genkit flow endpoint (e.g., on Cloud Functions for Firebase or Cloud Run) that accepts a JSON body `{ "data": { "prompt": "..." } }` and returns a JSON response with `{ "result": "{ \"prompt\": \"...\", \"options\": [...] }" }`.
-- When omitted, the app uses the curated fallback question bank (~45 questions across 3 themes).
-- When configured, the service sends the AI prompt with theme context, difficulty, and exclusion lists, then validates the response before presenting it as a game question.
+- When omitted, the app uses the curated fallback question bank.
+- When configured, the service sends the AI prompt with theme context, difficulty, locale, and exclusion lists, then validates the response before presenting it as a game question.
 - If the Genkit endpoint is unreachable, times out (10 s), or returns invalid data, the app automatically falls back to the curated question bank — no gameplay interruption.
+
+### Firebase (`VITE_FIREBASE_*`)
+
+- When all Firebase variables are provided, the app enables server-backed leaderboards, friend system, challenges, multiplayer matchmaking, and weekly events via Firestore.
+- When omitted, the app uses local-only localStorage leaderboards and social features are unavailable.
+- Firebase Auth bridges the Google Sign-In credential to Firebase for Firestore access control.
 
 For native builds you'll also need to configure platform-specific credentials (iOS URL schemes, Android SHA fingerprints); these steps are outside the current scope but the Capacitor bridge is ready.
 
@@ -192,29 +261,52 @@ For native builds you'll also need to configure platform-specific credentials (i
 
 ### Game Loop (`src/store/gameStore.ts`)
 
-1. **startGame(themeId)** resets state, assigns a new session ID via `randomUUID()`, and starts the 1-second interval timer.
-2. **fetchNextQuestion** derives the difficulty from the total number of questions answered so far and orchestrates AI (Genkit once available) or fallback questions while tracking uniqueness via `seenQuestionIds` and `seenOptionTexts`.
-3. **answer / skipQuestion** evaluate outcomes, apply active modifiers, adjust score/time, log history as `PlayedQuestion` records, and automatically fetch the next question.
+1. **startGame(themeId, challengeId?, eventId?, matchId?)** resets state, assigns a new session ID via `randomUUID()`, and starts the 1-second interval timer. Optional parameters link the session to a challenge, event, or multiplayer match.
+2. **fetchNextQuestion** derives the difficulty from the total number of questions answered so far and orchestrates AI (Genkit) or locale-specific fallback questions while tracking uniqueness via `seenQuestionIds` and `seenOptionTexts`.
+3. **answer / skipQuestion** evaluate outcomes, apply active modifiers and the combo multiplier, adjust score/time, update streak tracking, log history as `PlayedQuestion` records, and automatically fetch the next question.
 4. **usePowerCard** decrements the card's remaining count, then either swaps the question, removes a safe option, or activates a modifier flag (`doubleScore` / `timeKeep`).
 5. **finishGame** sets status to `'finished'`, records `finishedAt`, and halts the timer.
 
-The store also maintains `activeModifiers`, `powerCards` inventory, and `currentQuestionCardsUsed` to track per-question card usage in the results.
+The store also maintains `activeModifiers`, `powerCards` inventory, `currentQuestionCardsUsed`, `currentStreak`, `longestStreak`, and a `comboMultiplier` getter to track per-question card usage, streak momentum, and scoring depth.
 
 ### Results & Persistence (`src/views/ResultsPage.vue`)
 
-- Upon mount, the page builds a `GameRecord` snapshot. If the player is authenticated, the record is persisted via `saveGameRecord`.
+- Upon mount, the page builds a `GameRecord` snapshot. If the player is authenticated, the record is persisted via `saveGameRecord` and optionally submitted to the server leaderboard.
 - The persistence layer returns flags indicating personal bests or theme highs; the UI displays Ion chips accordingly.
+- Displays longest streak and best combo multiplier achieved during the session.
 - Guest players receive a prompt encouraging sign-in (no storage occurs for guests).
 
 ### High Scores (`src/views/HighScoresPage.vue`)
 
 - Uses Ionic segments to switch between "All Themes" and specific themes.
-- Entries are fetched from local storage via `listHighScores`, sorted by score, with timestamps rendered using `toLocaleString`.
+- Entries are fetched from Firestore-backed leaderboards when available, falling back to local storage. Sorted by score, with timestamps rendered using `toLocaleString`.
 
 ### Profile (`src/views/ProfilePage.vue`)
 
 - Allows signing in/out with Google or setting a persistent guest alias.
 - Displays the 10 most recent stored runs for authenticated players.
+- Accessibility settings: reduced motion toggle, haptic feedback toggle.
+- Locale picker for switching between English, Vietnamese, and Japanese.
+
+### Multiplayer (`src/store/multiplayerStore.ts`, `src/views/MatchmakingPage.vue`)
+
+- Players select versus or cooperative mode and a theme, then enter a matchmaking queue.
+- Cloud Functions automatically pair compatible players and create a match document.
+- Both players enter a lobby, mark ready, and start playing simultaneously.
+- Live game state (score, streak, question count) is broadcast to the opponent via Firestore listeners.
+- At game end, final scores are submitted and the winner (or team score) is determined.
+
+### Weekly Events (`src/store/eventStore.ts`, `src/views/EventsPage.vue`)
+
+- A scheduled Cloud Function creates a new weekly event every Monday with a rotating theme.
+- Players join events, play rounds that count toward standings, and compete on event-specific leaderboards.
+- Real-time subscriptions keep standings and event status up to date.
+
+### Friends & Challenges (`src/views/FriendsPage.vue`, `src/views/ChallengesPage.vue`)
+
+- Players search for and add friends via Firestore-backed friend requests.
+- Friends can send themed challenges with a 24-hour expiry window.
+- Both players' scores are tracked, and a winner is determined when both complete the challenge.
 
 ---
 
@@ -222,12 +314,21 @@ The store also maintains `activeModifiers`, `powerCards` inventory, and `current
 
 | Service / Data File | Purpose |
 | ------------------- | ------- |
-| `services/genkitService.ts` | Builds the exact prompt Genkit needs (including exclusion lists for seen questions/options), calls the deployed Genkit flow endpoint via `fetch()`, validates and parses the AI response, and converts it into a `GameQuestion`. Includes a 10-second timeout, one automatic retry on transient failures, and graceful fallback when the API URL is not configured or the endpoint is unreachable. |
-| `services/questionService.ts` | Guards question and option-text uniqueness, sanitizes AI results, and falls back to curated data when the AI service returns `null`. |
-| `data/questionBank.ts` | Provides deterministic question sets per theme (~45 curated questions across 3 themes and 4 difficulty levels) with odd option metadata for offline play and testing. Exports `getFallbackQuestion()`. |
-| `data/themes.ts` | Defines 3 core themes (World Football, Anime Universe, Science & Discovery) with accent colors and difficulty ramp arrays, plus 2 upcoming placeholders. |
-| `services/storageService.ts` | Wraps `localStorage` for saving `GameRecord` snapshots and computing leaderboards. Returns personal-best and theme-best flags on save. |
+| `services/genkitService.ts` | Builds the exact prompt Genkit needs (including exclusion lists for seen questions/options and locale context), calls the deployed Genkit flow endpoint via `fetch()`, validates and parses the AI response, and converts it into a `GameQuestion`. Includes a 10-second timeout, one automatic retry on transient failures, and graceful fallback when the API URL is not configured or the endpoint is unreachable. |
+| `services/questionService.ts` | Guards question and option-text uniqueness, sanitizes AI results, and falls back to locale-specific curated data when the AI service returns `null`. |
+| `data/questionBank.ts` | Curated fallback questions in English across 7 themes and 4 difficulty levels with odd option metadata for offline play and testing. Exports `getFallbackQuestion()`. |
+| `data/questionBank.vi.ts` | Vietnamese locale question bank mirroring the English structure. |
+| `data/questionBank.ja.ts` | Japanese locale question bank mirroring the English structure. |
+| `data/themes.ts` | Defines 7 themes (World Football, Anime Universe, Science & Discovery, Space Explorers, Street Foods, World History, Pop Music) with accent colors and difficulty ramp arrays. |
+| `services/storageService.ts` | Wraps `localStorage` for saving `GameRecord` snapshots and computing local leaderboards. Returns personal-best and theme-best flags on save. |
 | `services/authService.ts` | Lazy-loads the Google Identity Services SDK, decodes JWT credentials via `jwt-decode`, and exposes `signInWithGoogle()`, `signOutFromGoogle()`, and `isGoogleConfigured()` helpers. |
+| `services/firebaseService.ts` | Initializes Firebase app and services (Auth, Firestore) from `VITE_FIREBASE_*` env vars with graceful degradation when not configured. |
+| `services/leaderboardService.ts` | Server-backed leaderboards via Firestore: submit scores, fetch global/theme/friends rankings, compute user rank, and sync offline records. Falls back to local storage when Firebase is unavailable. |
+| `services/friendService.ts` | Friend system via Firestore: user profile management, search, friend requests (send/accept/decline), friend list retrieval, and relationship removal. |
+| `services/challengeService.ts` | Friend challenges via Firestore: create challenges with 24-hour expiry, accept/decline, submit scores, determine winners, and real-time subscriptions. |
+| `services/matchService.ts` | Real-time multiplayer via Firestore: matchmaking queue, match creation, player ready system, live game state broadcasting, and final score submission for versus and cooperative modes. |
+| `services/eventService.ts` | Weekly events via Firestore: fetch active/upcoming/completed events, join events, submit scores, retrieve standings, and real-time subscriptions for event updates and leaderboards. |
+| `services/offlineDatabase.ts` | IndexedDB wrapper (via `idb`) with three object stores: cached AI questions by theme+locale, mirrored game records, and user preferences. All operations are async with console.warn fallback. |
 
 ---
 
@@ -239,6 +340,9 @@ The store also maintains `activeModifiers`, `powerCards` inventory, and `current
 - Ionic's always-on dark palette is activated (`@ionic/vue/css/palettes/dark.always.css`).
 - Buttons use gradient fills (orange-to-red) with rounded corners; outline variants feature transparent backgrounds with accent borders.
 - Components such as `GameHud`, `CountdownBar`, and `PowerCardsStrip` keep surfaces translucent with subtle highlights.
+- Accessibility CSS (`src/theme/accessibility.css`) provides reduced motion overrides (respects `prefers-reduced-motion` and user toggle) and `.sr-only` utility class for screen reader content.
+- `ScreenReaderAnnouncer` component provides `aria-live` regions (polite and assertive) for dynamic game state announcements.
+- Haptic feedback integrates with Capacitor's Haptics plugin, offering light/medium/heavy taps, success/warning/error vibrations, and selection feedback — all toggleable by the user.
 
 ---
 
@@ -260,7 +364,7 @@ Test scaffolding is in place under `tests/` with example specs for both Vitest a
 ## Capacitor Notes
 
 - `capacitor.config.ts` is initialized with `appId: com.oddyssey.app`, `appName: Oddyssey`, and `webDir: dist`.
-- Plugins configured: SplashScreen (auto-hide disabled, dark background), StatusBar (dark style), Keyboard (body resize).
+- Plugins configured: SplashScreen (auto-hide disabled, dark background), StatusBar (dark style), Keyboard (body resize), ScreenOrientation, and Haptics.
 - Run `npx cap add ios` / `npx cap add android` after configuring native SDK prerequisites.
 - The Ionic CLI (`npx ionic capacitor run <platform>`) can streamline debugging once platforms are added.
 - Remember to sync after every web build: `npx cap sync`.
@@ -328,14 +432,4 @@ Oddyssey ships as a Progressive Web App with full offline capabilities:
 
 ---
 
-## Roadmap Ideas
-
-- ~~Integrate real Genkit API responses~~ ✅ (swap the mocked `Promise.resolve(null)`) — implemented with deployed Genkit flow endpoint support, response validation, timeout, retry, and graceful fallback.
-- Implement server-backed leaderboards and friend challenges.
-- Add more theme packs and localized question variants.
-- Track streaks/combo multipliers for extra scoring depth.
-- Offer cooperative/versus multiplayer or weekly events.
-- Enhance accessibility (reduce motion option, screen reader labels, haptics tuning).
-- ~~Ship native mobile binaries with custom splash screens and offline caching.~~ ✅ — Capacitor plugins configured (SplashScreen, StatusBar, Keyboard, ScreenOrientation), PWA manifest + service worker with Workbox caching, IndexedDB offline data layer, app icons and splash screen assets.
-
-Feel free to adapt these ideas to suit the product vision. Oddyssey's modular architecture is designed to grow as the content library, player base, and platform coverage expand.
+Oddyssey's modular architecture is designed to grow as the content library, player base, and platform coverage expand.
