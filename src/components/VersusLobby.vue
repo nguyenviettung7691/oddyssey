@@ -1,5 +1,5 @@
 <template>
-  <div class="versus-lobby">
+  <div class="versus-lobby" role="region" :aria-label="$t('multiplayer.matchmaking')">
     <div class="lobby-header">
       <h2>{{ themeLabel }}</h2>
       <ion-chip :color="modeColor" outline>
@@ -7,25 +7,25 @@
       </ion-chip>
     </div>
 
-    <div class="players-display">
-      <div class="player-card you">
+    <div class="players-display" role="group" aria-label="Players">
+      <div class="player-card you" :aria-label="player.displayName">
         <ion-avatar v-if="player.avatarUrl">
           <img :src="player.avatarUrl" :alt="player.displayName" />
         </ion-avatar>
-        <ion-icon v-else :icon="personCircleOutline" size="large" />
+        <ion-icon v-else :icon="personCircleOutline" size="large" :aria-hidden="true" />
         <span class="player-name">{{ player.displayName }}</span>
         <ion-chip :color="playerReady ? 'success' : 'medium'" outline>
           {{ playerReady ? $t('multiplayer.ready') : $t('multiplayer.notReady') }}
         </ion-chip>
       </div>
 
-      <span class="vs-text">VS</span>
+      <span class="vs-text" aria-hidden="true">VS</span>
 
-      <div class="player-card opponent">
+      <div class="player-card opponent" :aria-label="opponent.displayName">
         <ion-avatar v-if="opponent.avatarUrl">
           <img :src="opponent.avatarUrl" :alt="opponent.displayName" />
         </ion-avatar>
-        <ion-icon v-else :icon="personCircleOutline" size="large" />
+        <ion-icon v-else :icon="personCircleOutline" size="large" :aria-hidden="true" />
         <span class="player-name">{{ opponent.displayName }}</span>
         <ion-chip :color="opponentReady ? 'success' : 'medium'" outline>
           {{ opponentReady ? $t('multiplayer.ready') : $t('multiplayer.notReady') }}
@@ -34,13 +34,13 @@
     </div>
 
     <div class="lobby-actions">
-      <ion-button v-if="!playerReady" expand="block" size="large" @click="$emit('ready')">
+      <ion-button v-if="!playerReady" expand="block" size="large" :aria-label="$t('multiplayer.readyUp')" @click="$emit('ready')">
         {{ $t('multiplayer.readyUp') }}
       </ion-button>
-      <ion-button v-else expand="block" size="large" color="success" disabled>
+      <ion-button v-else expand="block" size="large" color="success" disabled :aria-label="$t('multiplayer.waitingForOpponent')">
         {{ $t('multiplayer.waitingForOpponent') }}
       </ion-button>
-      <ion-button expand="block" fill="outline" color="danger" @click="$emit('leave')">
+      <ion-button expand="block" fill="outline" color="danger" :aria-label="$t('multiplayer.leaveLobby')" @click="$emit('leave')">
         {{ $t('multiplayer.leaveLobby') }}
       </ion-button>
     </div>

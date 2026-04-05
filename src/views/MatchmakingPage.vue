@@ -3,7 +3,7 @@
     <ion-header>
       <ion-toolbar color="dark">
         <ion-buttons slot="start">
-          <ion-button fill="clear" router-link="/home">
+          <ion-button fill="clear" router-link="/home" :aria-label="$t('accessibility.backToHome')">
             <ion-icon slot="icon-only" :icon="arrowBackOutline" />
           </ion-button>
         </ion-buttons>
@@ -124,11 +124,15 @@ import VersusLobby from '@/components/VersusLobby.vue';
 import { coreThemes } from '@/data/themes';
 import { useMultiplayerStore } from '@/store/multiplayerStore';
 import { useUserStore } from '@/store/userStore';
+import { useAnnouncer } from '@/composables/useAnnouncer';
+import { useI18n } from 'vue-i18n';
 import type { MatchMode } from '@/types/game';
 
+const { t } = useI18n();
 const router = useRouter();
 const multiplayerStore = useMultiplayerStore();
 const userStore = useUserStore();
+const { announce } = useAnnouncer();
 
 const selectedTheme = ref<string | null>(coreThemes[0]?.id ?? null);
 const selectedMode = ref<MatchMode>('versus');
@@ -187,6 +191,9 @@ function handleLeave(): void {
 watch(
   () => multiplayerStore.match?.status,
   (status) => {
+    if (status === 'waiting') {
+      announce(t('accessibility.matchFound'), 'assertive');
+    }
     if (status === 'playing' && multiplayerStore.match) {
       router.push({
         name: 'Game',

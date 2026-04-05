@@ -1,10 +1,10 @@
 <template>
-  <ion-modal :is-open="isOpen" @did-dismiss="$emit('dismiss')">
+  <ion-modal :is-open="isOpen" @did-dismiss="$emit('dismiss')" role="dialog" :aria-label="$t('multiplayer.matchResult')">
     <ion-header>
       <ion-toolbar color="dark">
         <ion-title>{{ $t('multiplayer.matchResult') }}</ion-title>
         <ion-buttons slot="end">
-          <ion-button @click="$emit('dismiss')">
+          <ion-button :aria-label="$t('accessibility.close')" @click="$emit('dismiss')">
             <ion-icon slot="icon-only" :icon="closeOutline" />
           </ion-button>
         </ion-buttons>

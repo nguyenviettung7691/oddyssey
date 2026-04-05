@@ -1,14 +1,14 @@
 ﻿<template>
   <ion-card class="question-card">
     <ion-card-header>
-      <ion-chip class="difficulty" color="dark">
+      <ion-chip class="difficulty" color="dark" :aria-label="$t('accessibility.difficulty', { level: question.difficulty })">
         <ion-icon :icon="chipIcon" />
         <ion-label>{{ question.difficulty.toUpperCase() }}</ion-label>
       </ion-chip>
-      <ion-card-title>{{ question.prompt }}</ion-card-title>
+      <ion-card-title :id="questionTitleId">{{ question.prompt }}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <ion-list lines="none">
+      <ion-list lines="none" role="group" :aria-labelledby="questionTitleId">
         <ion-item
           v-for="option in question.options"
           :key="option.id"
@@ -16,7 +16,8 @@
           :detail="false"
           class="option-item"
           :disabled="disabled"
-          @click="() => emit('select', option.id)"
+          :aria-label="option.text"
+          @click="() => selectOption(option.id)"
         >
           <ion-label>{{ option.text }}</ion-label>
         </ion-item>
@@ -40,6 +41,7 @@ import {
 } from '@ionic/vue';
 import { alertCircleOutline, flameOutline, sparklesOutline } from 'ionicons/icons';
 import type { GameQuestion } from '@/types/game';
+import { useHaptics } from '@/composables/useHaptics';
 
 const props = defineProps<{
   question: GameQuestion;
@@ -49,6 +51,15 @@ const props = defineProps<{
 const emit = defineEmits<{
   select: [optionId: string];
 }>();
+
+const { lightTap } = useHaptics();
+
+const questionTitleId = computed(() => `question-${props.question.id}`);
+
+function selectOption(optionId: string): void {
+  emit('select', optionId);
+  lightTap();
+}
 
 const chipIcon = computed(() => {
   switch (props.question.difficulty) {

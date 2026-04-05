@@ -1,9 +1,9 @@
 <template>
-  <div class="event-countdown" v-if="remaining > 0">
+  <div class="event-countdown" v-if="remaining > 0" role="timer" :aria-label="label + ': ' + formattedTime">
     <span class="countdown-label">{{ label }}</span>
     <span class="countdown-value">{{ formattedTime }}</span>
   </div>
-  <div class="event-countdown ended" v-else>
+  <div class="event-countdown ended" v-else role="status">
     <span class="countdown-label">{{ $t('events.eventEnded') }}</span>
   </div>
 </template>

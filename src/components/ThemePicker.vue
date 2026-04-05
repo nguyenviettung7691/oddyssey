@@ -1,5 +1,5 @@
 ﻿<template>
-  <ion-grid class="theme-grid">
+  <ion-grid class="theme-grid" role="radiogroup" :aria-label="$t('home.selectTheme')">
     <ion-row>
       <ion-col
         v-for="theme in themes"
@@ -12,7 +12,10 @@
           button
           :disabled="disabled"
           :class="{ selected: theme.id === modelValue }"
-          @click="() => emit('update:modelValue', theme.id)"
+          role="radio"
+          :aria-checked="theme.id === modelValue"
+          :aria-label="theme.label"
+          @click="() => selectTheme(theme.id)"
         >
           <ion-card-header>
             <ion-card-title>{{ theme.label }}</ion-card-title>
@@ -39,7 +42,7 @@
         size-md="6"
         size-lg="4"
       >
-        <ion-card class="upcoming" disabled>
+        <ion-card class="upcoming" disabled :aria-label="theme.label + ' — ' + $t('themePicker.comingSoon')">
           <ion-card-header>
             <ion-card-title>{{ theme.label }}</ion-card-title>
             <ion-card-subtitle>{{ theme.description }}</ion-card-subtitle>
@@ -67,6 +70,7 @@ import {
 } from '@ionic/vue';
 import { bookOutline, fastFoodOutline, flaskOutline, footballOutline, musicalNotesOutline, planetOutline, sparklesOutline } from 'ionicons/icons';
 import type { ThemeDefinition } from '@/types/game';
+import { useHaptics } from '@/composables/useHaptics';
 
 const { themes, upcomingThemes, modelValue, disabled } = defineProps<{
   themes: ThemeDefinition[];
@@ -78,6 +82,13 @@ const { themes, upcomingThemes, modelValue, disabled } = defineProps<{
 const emit = defineEmits<{
   'update:modelValue': [value: string];
 }>();
+
+const { selectionChanged } = useHaptics();
+
+function selectTheme(id: string): void {
+  emit('update:modelValue', id);
+  selectionChanged();
+}
 
 const icons: Record<string, string> = {
   football: footballOutline,

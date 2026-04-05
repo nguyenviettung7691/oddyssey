@@ -210,5 +210,27 @@
     "draw": "引き分け！",
     "you": "あなた",
     "rematch": "リマッチ"
+  },
+  "accessibility": {
+    "title": "アクセシビリティ",
+    "reduceAnimations": "アニメーションを減らす",
+    "hapticFeedback": "触覚フィードバック",
+    "backToHome": "ホームに戻る",
+    "close": "閉じる",
+    "timeRemaining": "残り{time}秒",
+    "difficulty": "難易度: {level}",
+    "gameStatus": "ゲーム状況",
+    "powerCards": "パワーカード",
+    "powerCardUsed": "{card}パワーカード発動",
+    "scoreUpdate": "スコア: {score}ポイント",
+    "correct": "正解！",
+    "incorrect": "不正解、答えは{answer}",
+    "streakUpdate": "連続: {streak}、コンボ倍率x{multiplier}",
+    "timeWarning": "残り{seconds}秒",
+    "gameOver": "ゲームオーバー！最終スコア: {score}ポイント",
+    "errorLoading": "問題の読み込みエラー",
+    "coopStatus": "パートナーの状態",
+    "opponentStatus": "対戦相手の状態",
+    "matchFound": "マッチが見つかりました！"
   }
 }

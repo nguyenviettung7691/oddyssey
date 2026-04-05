@@ -3,7 +3,7 @@
     <ion-header>
       <ion-toolbar color="dark">
         <ion-buttons slot="start">
-          <ion-button fill="clear" router-link="/home">
+          <ion-button fill="clear" router-link="/home" :aria-label="$t('accessibility.backToHome')">
             <ion-icon slot="icon-only" :icon="arrowBackOutline" />
           </ion-button>
         </ion-buttons>

@@ -1,5 +1,12 @@
 ﻿<template>
-  <div class="timer-shell">
+  <div
+    class="timer-shell"
+    role="progressbar"
+    :aria-valuenow="props.remaining"
+    :aria-valuemin="0"
+    :aria-valuemax="props.total"
+    :aria-label="$t('accessibility.timeRemaining', { time: props.remaining })"
+  >
     <div class="timer-track"></div>
     <div class="timer-fill" :style="fillStyle"></div>
   </div>

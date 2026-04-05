@@ -1,16 +1,16 @@
 <template>
-  <div class="coop-hud" v-if="partner">
-    <div class="team-score">
+  <div class="coop-hud" v-if="partner" :aria-label="$t('accessibility.coopStatus')" role="status">
+    <div class="team-score" :aria-label="$t('multiplayer.teamScore') + ': ' + teamScore">
       <span class="team-label">{{ $t('multiplayer.teamScore') }}</span>
       <span class="team-value">{{ teamScore }}</span>
     </div>
-    <div class="partner-info">
+    <div class="partner-info" :aria-label="partner.displayName">
       <ion-avatar v-if="partner.avatarUrl" class="partner-avatar">
         <img :src="partner.avatarUrl" :alt="partner.displayName" />
       </ion-avatar>
-      <ion-icon v-else :icon="personCircleOutline" class="partner-icon" />
+      <ion-icon v-else :icon="personCircleOutline" class="partner-icon" :aria-hidden="true" />
       <span class="partner-name">{{ partner.displayName }}</span>
-      <span v-if="partnerStreak > 0" class="partner-streak">🔥{{ partnerStreak }}</span>
+      <span v-if="partnerStreak > 0" class="partner-streak" :aria-label="$t('hud.streak') + ': ' + partnerStreak">🔥{{ partnerStreak }}</span>
     </div>
   </div>
 </template>

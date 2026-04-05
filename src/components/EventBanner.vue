@@ -1,5 +1,5 @@
 <template>
-  <ion-card v-if="event" class="event-banner" button @click="$emit('select', event.id)">
+  <ion-card v-if="event" class="event-banner" button :aria-label="event.title + ' — ' + $t('events.liveNow')" @click="$emit('select', event.id)">
     <ion-card-content class="banner-content">
       <div class="banner-info">
         <ion-chip color="success" outline>

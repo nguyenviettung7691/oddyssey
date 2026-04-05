@@ -4,21 +4,21 @@
       <ion-toolbar color="dark">
         <ion-title>{{ $t('app.title') }}</ion-title>
         <ion-buttons slot="end">
-          <ion-button v-if="firebaseReady" router-link="/events" fill="clear">
+          <ion-button v-if="firebaseReady" router-link="/events" fill="clear" :aria-label="$t('events.title')">
             <ion-icon slot="icon-only" :icon="calendarOutline" />
           </ion-button>
-          <ion-button v-if="firebaseReady && userStore.isAuthenticated" router-link="/friends" fill="clear">
+          <ion-button v-if="firebaseReady && userStore.isAuthenticated" router-link="/friends" fill="clear" :aria-label="$t('friends.title')">
             <ion-icon slot="icon-only" :icon="peopleOutline" />
             <ion-badge v-if="notificationStore.friendsBadge > 0" color="danger" class="nav-badge">{{ notificationStore.friendsBadge }}</ion-badge>
           </ion-button>
-          <ion-button v-if="firebaseReady && userStore.isAuthenticated" router-link="/challenges" fill="clear">
+          <ion-button v-if="firebaseReady && userStore.isAuthenticated" router-link="/challenges" fill="clear" :aria-label="$t('challenges.title')">
             <ion-icon slot="icon-only" :icon="flashOutline" />
             <ion-badge v-if="notificationStore.challengesBadge > 0" color="danger" class="nav-badge">{{ notificationStore.challengesBadge }}</ion-badge>
           </ion-button>
-          <ion-button router-link="/highscores" fill="clear">
+          <ion-button router-link="/highscores" fill="clear" :aria-label="$t('highScores.title')">
             <ion-icon slot="icon-only" :icon="trophyOutline" />
           </ion-button>
-          <ion-button router-link="/profile" fill="clear">
+          <ion-button router-link="/profile" fill="clear" :aria-label="$t('profile.title')">
             <ion-icon slot="icon-only" :icon="personCircleOutline" />
           </ion-button>
         </ion-buttons>
@@ -42,7 +42,7 @@
       />
 
       <section v-if="firebaseReady && userStore.isAuthenticated" class="multiplayer-section">
-        <ion-button expand="block" fill="outline" @click="goToMatchmaking">
+        <ion-button expand="block" fill="outline" @click="goToMatchmaking" :aria-label="$t('multiplayer.findMatch')">
           <ion-icon :icon="gameControllerOutline" slot="start" />
           {{ $t('multiplayer.findMatch') }}
         </ion-button>
@@ -73,7 +73,7 @@
       </ion-card>
 
       <ion-footer class="start-footer">
-        <ion-button expand="block" size="large" :disabled="!selectedTheme" @click="begin">
+        <ion-button expand="block" size="large" :disabled="!selectedTheme" :aria-label="$t('home.startButton')" @click="begin">
           {{ $t('home.startButton') }}
         </ion-button>
       </ion-footer>
@@ -112,12 +112,15 @@ import { useNotificationStore } from '@/store/notificationStore';
 import { useEventStore } from '@/store/eventStore';
 import { isFirebaseConfigured } from '@/services/firebaseService';
 
+import { useHaptics } from '@/composables/useHaptics';
+
 const router = useRouter();
 const userStore = useUserStore();
 const notificationStore = useNotificationStore();
 const eventStore = useEventStore();
 const selectedTheme = ref<string | null>(coreThemes[0]?.id ?? null);
 const firebaseReady = isFirebaseConfigured();
+const { lightTap } = useHaptics();
 
 const featuredEvent = computed(() => eventStore.featuredEvent);
 
@@ -125,6 +128,7 @@ function begin(): void {
   if (!selectedTheme.value) {
     return;
   }
+  lightTap();
   router.push({ name: 'Game', query: { theme: selectedTheme.value } });
 }
 

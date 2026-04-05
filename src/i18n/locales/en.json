@@ -210,5 +210,27 @@
     "draw": "Draw!",
     "you": "You",
     "rematch": "Rematch"
+  },
+  "accessibility": {
+    "title": "Accessibility",
+    "reduceAnimations": "Reduce animations",
+    "hapticFeedback": "Haptic feedback",
+    "backToHome": "Back to home",
+    "close": "Close",
+    "timeRemaining": "{time} seconds remaining",
+    "difficulty": "Difficulty: {level}",
+    "gameStatus": "Game status",
+    "powerCards": "Power cards",
+    "powerCardUsed": "{card} power card activated",
+    "scoreUpdate": "Score: {score} points",
+    "correct": "Correct!",
+    "incorrect": "Incorrect, the answer was {answer}",
+    "streakUpdate": "Streak: {streak}, combo multiplier x{multiplier}",
+    "timeWarning": "{seconds} seconds remaining",
+    "gameOver": "Game over! Final score: {score} points",
+    "errorLoading": "Error loading question",
+    "coopStatus": "Co-op partner status",
+    "opponentStatus": "Opponent status",
+    "matchFound": "Match found!"
   }
 }

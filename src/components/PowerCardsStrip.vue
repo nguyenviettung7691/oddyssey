@@ -1,5 +1,5 @@
 ﻿<template>
-  <div class="power-strip">
+  <div class="power-strip" role="group" :aria-label="$t('accessibility.powerCards')">
     <ion-button
       v-for="card in cards"
       :key="card.type"
@@ -7,8 +7,10 @@
       fill="clear"
       class="power-card"
       :disabled="card.remaining <= 0 || disabled"
+      :aria-disabled="card.remaining <= 0 || disabled"
+      :aria-label="t(titleKeyMap[card.type]) + ', ' + t('powerCard.remaining', { count: card.remaining })"
       :class="{ active: card.isActive }"
-      @click="() => emit('use', card.type)"
+      @click="() => activateCard(card.type)"
     >
       <ion-icon slot="start" :icon="iconMap[card.type]" />
       <ion-label>
@@ -29,6 +31,7 @@ import {
   swapHorizontalOutline,
 } from 'ionicons/icons';
 import type { PowerCardState, PowerCardType } from '@/types/game';
+import { useHaptics } from '@/composables/useHaptics';
 
 const { cards, disabled } = defineProps<{
   cards: PowerCardState[];
@@ -40,6 +43,12 @@ const emit = defineEmits<{
 }>();
 
 const { t } = useI18n();
+const { mediumTap } = useHaptics();
+
+function activateCard(type: PowerCardType): void {
+  emit('use', type);
+  mediumTap();
+}
 
 const iconMap: Record<PowerCardType, string> = {
   swap: swapHorizontalOutline,
