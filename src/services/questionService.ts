@@ -99,9 +99,12 @@ export async function fetchQuestion(
       if (unseen.length > 0) {
         const pick = unseen[Math.floor(Math.random() * unseen.length)];
         const cachedQuestion = pick.data as GameQuestion;
-        const sanitized = sanitizeQuestion(cachedQuestion);
-        applyUniquenessTracking(sanitized, seenQuestionIds, seenOptionTexts);
-        return sanitized;
+        // Validate the cached data has the expected shape
+        if (cachedQuestion && cachedQuestion.id && Array.isArray(cachedQuestion.options)) {
+          const sanitized = sanitizeQuestion(cachedQuestion);
+          applyUniquenessTracking(sanitized, seenQuestionIds, seenOptionTexts);
+          return sanitized;
+        }
       }
     } catch {
       // IndexedDB unavailable — continue to curated fallback

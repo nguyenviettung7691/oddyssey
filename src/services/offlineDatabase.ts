@@ -67,7 +67,8 @@ export async function getCachedQuestions(themeId: string, locale: string): Promi
   try {
     const db = await getDB();
     return await db.getAllFromIndex('questions', 'by-theme-locale', [themeId, locale]);
-  } catch {
+  } catch (error) {
+    console.warn('[Oddyssey] IndexedDB getCachedQuestions failed', error);
     return [];
   }
 }
@@ -76,8 +77,8 @@ export async function cacheQuestion(question: CachedQuestion): Promise<void> {
   try {
     const db = await getDB();
     await db.put('questions', question);
-  } catch {
-    // Silently fail — caching is best-effort
+  } catch (error) {
+    console.warn('[Oddyssey] IndexedDB cacheQuestion failed', error);
   }
 }
 
@@ -85,8 +86,8 @@ export async function clearQuestionCache(): Promise<void> {
   try {
     const db = await getDB();
     await db.clear('questions');
-  } catch {
-    // Silently fail
+  } catch (error) {
+    console.warn('[Oddyssey] IndexedDB clearQuestionCache failed', error);
   }
 }
 
@@ -96,8 +97,8 @@ export async function saveGameRecordToIDB(record: GameRecord): Promise<void> {
   try {
     const db = await getDB();
     await db.put('gameRecords', record);
-  } catch {
-    // Silently fail — localStorage is the synchronous fallback
+  } catch (error) {
+    console.warn('[Oddyssey] IndexedDB saveGameRecord failed', error);
   }
 }
 
@@ -105,7 +106,8 @@ export async function getGameRecordsByUser(userId: string): Promise<GameRecord[]
   try {
     const db = await getDB();
     return await db.getAllFromIndex('gameRecords', 'by-userId', userId);
-  } catch {
+  } catch (error) {
+    console.warn('[Oddyssey] IndexedDB getGameRecordsByUser failed', error);
     return [];
   }
 }
@@ -114,7 +116,8 @@ export async function getAllGameRecords(): Promise<GameRecord[]> {
   try {
     const db = await getDB();
     return await db.getAll('gameRecords');
-  } catch {
+  } catch (error) {
+    console.warn('[Oddyssey] IndexedDB getAllGameRecords failed', error);
     return [];
   }
 }
@@ -123,8 +126,8 @@ export async function clearGameRecordsFromIDB(): Promise<void> {
   try {
     const db = await getDB();
     await db.clear('gameRecords');
-  } catch {
-    // Silently fail
+  } catch (error) {
+    console.warn('[Oddyssey] IndexedDB clearGameRecords failed', error);
   }
 }
 
@@ -135,7 +138,8 @@ export async function getPreference<T>(key: string): Promise<T | undefined> {
     const db = await getDB();
     const entry = await db.get('userPreferences', key);
     return entry?.value as T | undefined;
-  } catch {
+  } catch (error) {
+    console.warn('[Oddyssey] IndexedDB getPreference failed', error);
     return undefined;
   }
 }
@@ -144,7 +148,7 @@ export async function setPreference<T>(key: string, value: T): Promise<void> {
   try {
     const db = await getDB();
     await db.put('userPreferences', { key, value });
-  } catch {
-    // Silently fail
+  } catch (error) {
+    console.warn('[Oddyssey] IndexedDB setPreference failed', error);
   }
 }

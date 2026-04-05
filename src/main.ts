@@ -2,6 +2,7 @@
 import { IonicVue } from '@ionic/vue';
 import { createPinia } from 'pinia';
 import { Capacitor } from '@capacitor/core';
+import { SplashScreen } from '@capacitor/splash-screen';
 
 import App from './App.vue';
 import router from './router';
@@ -93,7 +94,6 @@ router.isReady().then(async () => {
 
   // Hide native splash screen once the app is mounted
   if (Capacitor.isNativePlatform()) {
-    const { SplashScreen } = await import('@capacitor/splash-screen');
     await SplashScreen.hide();
   }
 });
