@@ -1,6 +1,7 @@
 ﻿import { createApp } from 'vue';
 import { IonicVue } from '@ionic/vue';
 import { createPinia } from 'pinia';
+import { Capacitor } from '@capacitor/core';
 
 import App from './App.vue';
 import router from './router';
@@ -11,6 +12,7 @@ import { initializeFirebase, isFirebaseConfigured } from '@/services/firebaseSer
 import { ensureUserProfile } from '@/services/friendService';
 import { syncLocalRecords } from '@/services/leaderboardService';
 import { getUserRecords } from '@/services/storageService';
+import { registerSW } from 'virtual:pwa-register';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
@@ -86,6 +88,17 @@ userStore.$onAction(({ name, after }) => {
   }
 });
 
-router.isReady().then(() => {
+router.isReady().then(async () => {
   app.mount('#app');
+
+  // Hide native splash screen once the app is mounted
+  if (Capacitor.isNativePlatform()) {
+    const { SplashScreen } = await import('@capacitor/splash-screen');
+    await SplashScreen.hide();
+  }
 });
+
+// Register service worker for offline caching (web only)
+if (!Capacitor.isNativePlatform()) {
+  registerSW({ immediate: true });
+}

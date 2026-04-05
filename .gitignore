@@ -27,6 +27,12 @@ npm-debug.log*
 /coverage
 /dist
 /node_modules
-/platforms
 /plugins
 /www
+
+# Native platform build artifacts (keep ios/ and android/ tracked for CI)
+ios/App/Pods/
+ios/capacitor-cordova-ios-plugins/
+android/.gradle/
+android/app/build/
+android/capacitor-cordova-android-plugins/build/
