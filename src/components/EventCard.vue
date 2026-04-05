@@ -1,5 +1,5 @@
 <template>
-  <ion-card class="event-card" button @click="$emit('select', event.id)">
+  <ion-card class="event-card" button :aria-label="event.title + ' — ' + statusLabel" @click="$emit('select', event.id)">
     <ion-card-header>
       <ion-card-subtitle>
         <ion-icon :icon="calendarOutline" />

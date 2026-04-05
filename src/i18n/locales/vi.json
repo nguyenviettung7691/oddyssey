@@ -210,5 +210,27 @@
     "draw": "Hòa!",
     "you": "Bạn",
     "rematch": "Chơi lại"
+  },
+  "accessibility": {
+    "title": "Trợ năng",
+    "reduceAnimations": "Giảm hoạt ảnh",
+    "hapticFeedback": "Phản hồi rung",
+    "backToHome": "Về trang chủ",
+    "close": "Đóng",
+    "timeRemaining": "Còn {time} giây",
+    "difficulty": "Độ khó: {level}",
+    "gameStatus": "Trạng thái trò chơi",
+    "powerCards": "Thẻ năng lực",
+    "powerCardUsed": "Đã kích hoạt thẻ {card}",
+    "scoreUpdate": "Điểm: {score}",
+    "correct": "Đúng!",
+    "incorrect": "Sai, đáp án là {answer}",
+    "streakUpdate": "Chuỗi: {streak}, hệ số x{multiplier}",
+    "timeWarning": "Còn {seconds} giây",
+    "gameOver": "Hết giờ! Tổng điểm: {score}",
+    "errorLoading": "Lỗi tải câu hỏi",
+    "coopStatus": "Trạng thái đồng đội",
+    "opponentStatus": "Trạng thái đối thủ",
+    "matchFound": "Đã tìm thấy trận!"
   }
 }

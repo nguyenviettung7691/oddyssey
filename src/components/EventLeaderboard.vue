@@ -1,8 +1,8 @@
 <template>
-  <div class="event-leaderboard">
+  <div class="event-leaderboard" role="region" :aria-label="$t('events.leaderboard')">
     <ion-list v-if="standings.length > 0" inset>
       <ion-list-header>{{ $t('events.leaderboard') }}</ion-list-header>
-      <ion-item v-for="entry in standings" :key="entry.userId" :class="{ 'current-user': entry.userId === currentUserId }">
+      <ion-item v-for="entry in standings" :key="entry.userId" :class="{ 'current-user': entry.userId === currentUserId }" :aria-label="'#' + entry.rank + ' ' + entry.displayName + ', ' + entry.bestScore + ' ' + $t('events.pts')">
         <ion-avatar slot="start" v-if="entry.avatarUrl">
           <img :src="entry.avatarUrl" :alt="entry.displayName" />
         </ion-avatar>

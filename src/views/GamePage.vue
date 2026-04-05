@@ -3,13 +3,13 @@
     <ion-header>
       <ion-toolbar color="dark">
         <ion-buttons slot="start">
-          <ion-button fill="clear" router-link="/home">
+          <ion-button fill="clear" router-link="/home" :aria-label="$t('accessibility.backToHome')">
             <ion-icon slot="icon-only" :icon="arrowBackOutline" />
           </ion-button>
         </ion-buttons>
         <ion-title>{{ headerTitle }}</ion-title>
         <ion-buttons slot="end">
-          <ion-button fill="clear" @click="handleSkip" :disabled="!canInteract">
+          <ion-button fill="clear" @click="handleSkip" :disabled="!canInteract" :aria-label="$t('game.skipButton')">
             <ion-icon :icon="playSkipForwardOutline" slot="start" />
             {{ $t('game.skipButton') }}
           </ion-button>
@@ -69,6 +69,7 @@ import {
   IonToolbar,
 } from '@ionic/vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import { arrowBackOutline, warningOutline, playSkipForwardOutline } from 'ionicons/icons';
 import CountdownBar from '@/components/CountdownBar.vue';
 import GameHud from '@/components/GameHud.vue';
@@ -76,11 +77,16 @@ import PowerCardsStrip from '@/components/PowerCardsStrip.vue';
 import QuestionCard from '@/components/QuestionCard.vue';
 import { coreThemes } from '@/data/themes';
 import { useGameStore } from '@/store/gameStore';
+import { useAnnouncer } from '@/composables/useAnnouncer';
+import { useHaptics } from '@/composables/useHaptics';
 import type { PowerCardType } from '@/types/game';
 
+const { t } = useI18n();
 const router = useRouter();
 const route = useRoute();
 const game = useGameStore();
+const { announce } = useAnnouncer();
+const { success: hapticSuccess, error: hapticError, warning: hapticWarning, heavyTap } = useHaptics();
 const totalTime = 60;
 
 const themeId = computed(() => (route.query.theme as string | undefined) ?? game.themeId);
@@ -113,7 +119,14 @@ function handleAnswer(optionId: string): void {
   if (!canInteract.value) {
     return;
   }
+  const question = game.currentQuestion;
+  const isCorrect = question ? optionId === question.oddOptionId : false;
   game.answer(optionId);
+  if (isCorrect) {
+    hapticSuccess();
+  } else {
+    hapticError();
+  }
 }
 
 function handleSkip(): void {
@@ -123,18 +136,78 @@ function handleSkip(): void {
   game.skipQuestion();
 }
 
+const powerCardI18nKey: Record<PowerCardType, string> = {
+  swap: 'powerCard.swap',
+  'remove-correct': 'powerCard.removeCorrect',
+  'double-score': 'powerCard.doubleScore',
+  'time-keep': 'powerCard.timeKeep',
+};
+
 function handlePowerCard(card: PowerCardType): void {
   if (!canInteract.value && card !== 'swap') {
     return;
   }
   game.usePowerCard(card);
+  announce(t('accessibility.powerCardUsed', { card: t(powerCardI18nKey[card]) }));
 }
 
+// Announce score changes
+watch(() => game.score, (newScore, oldScore) => {
+  if (newScore !== oldScore && game.status === 'running') {
+    announce(t('accessibility.scoreUpdate', { score: newScore }));
+  }
+});
+
+// Announce correct/incorrect answers
+watch(() => game.questions.length, (newLen, oldLen) => {
+  if (newLen > oldLen && game.status === 'running') {
+    const lastQuestion = game.questions[newLen - 1];
+    if (lastQuestion) {
+      if (lastQuestion.outcome === 'correct') {
+        announce(t('accessibility.correct'));
+      } else if (lastQuestion.outcome === 'incorrect') {
+        const oddOption = lastQuestion.question.options.find(o => o.id === lastQuestion.question.oddOptionId);
+        announce(t('accessibility.incorrect', { answer: oddOption?.text ?? '' }));
+      }
+    }
+  }
+});
+
+// Announce streak changes
+watch(() => game.currentStreak, (newStreak) => {
+  if (newStreak >= 3 && game.status === 'running') {
+    announce(t('accessibility.streakUpdate', { streak: newStreak, multiplier: game.comboMultiplier }));
+  }
+});
+
+// Timer warnings
+watch(() => game.remainingTime, (time) => {
+  if (time === 10) {
+    announce(t('accessibility.timeWarning', { seconds: 10 }), 'assertive');
+    hapticWarning();
+  } else if (time === 5) {
+    announce(t('accessibility.timeWarning', { seconds: 5 }), 'assertive');
+    hapticWarning();
+  }
+});
+
+// Announce new question loaded
+watch(() => game.currentQuestion, (question) => {
+  if (question && game.status === 'running') {
+    announce(t('hud.question') + ': ' + question.prompt);
+  }
+});
+
+// Game over
 watch(
   () => game.status,
   (status) => {
     if (status === 'finished') {
+      announce(t('accessibility.gameOver', { score: game.score }), 'assertive');
+      heavyTap();
       router.replace({ name: 'Results' });
+    } else if (status === 'error') {
+      announce(t('accessibility.errorLoading'), 'assertive');
     }
   },
 );

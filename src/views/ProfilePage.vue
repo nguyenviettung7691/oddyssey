@@ -4,7 +4,7 @@
       <ion-toolbar color="dark">
         <ion-title>{{ $t('profile.title') }}</ion-title>
         <ion-buttons slot="start">
-          <ion-button fill="clear" router-link="/home">
+          <ion-button fill="clear" router-link="/home" :aria-label="$t('accessibility.backToHome')">
             <ion-icon slot="icon-only" :icon="arrowBackOutline" />
           </ion-button>
         </ion-buttons>
@@ -49,9 +49,37 @@
         </ion-card-header>
         <ion-card-content>
           <ion-list lines="none">
-            <ion-item v-for="loc in supportedLocales" :key="loc.code" button @click="switchLocale(loc.code)">
+            <ion-item v-for="loc in supportedLocales" :key="loc.code" button @click="switchLocale(loc.code)" :aria-label="loc.label" role="radio" :aria-checked="locale === loc.code">
               <ion-label>{{ loc.label }}</ion-label>
               <ion-icon v-if="locale === loc.code" :icon="checkmarkOutline" slot="end" color="primary" />
+            </ion-item>
+          </ion-list>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>{{ $t('accessibility.title') }}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-list lines="none">
+            <ion-item>
+              <ion-label>{{ $t('accessibility.reduceAnimations') }}</ion-label>
+              <ion-toggle
+                slot="end"
+                :checked="prefersReducedMotion"
+                :aria-label="$t('accessibility.reduceAnimations')"
+                @ionChange="(e: CustomEvent) => setReducedMotion(e.detail.checked)"
+              />
+            </ion-item>
+            <ion-item>
+              <ion-label>{{ $t('accessibility.hapticFeedback') }}</ion-label>
+              <ion-toggle
+                slot="end"
+                :checked="hapticsEnabled"
+                :aria-label="$t('accessibility.hapticFeedback')"
+                @ionChange="(e: CustomEvent) => setHapticsEnabled(e.detail.checked)"
+              />
             </ion-item>
           </ion-list>
         </ion-card-content>
@@ -96,6 +124,7 @@ import {
   IonPage,
   IonText,
   IonTitle,
+  IonToggle,
   IonToolbar,
 } from '@ionic/vue';
 import { arrowBackOutline, checkmarkOutline } from 'ionicons/icons';
@@ -103,12 +132,16 @@ import { useUserStore } from '@/store/userStore';
 import { getUserRecords } from '@/services/storageService';
 import { isGoogleConfigured } from '@/services/authService';
 import { supportedLocales, persistLocale } from '@/i18n';
+import { useReducedMotion } from '@/composables/useReducedMotion';
+import { useHaptics } from '@/composables/useHaptics';
 import type { GameRecord } from '@/types/game';
 
 const { t, locale } = useI18n();
 const userStore = useUserStore();
 const guestAlias = ref(userStore.displayName);
 const pastRuns = ref<GameRecord[]>([]);
+const { prefersReducedMotion, setReducedMotion } = useReducedMotion();
+const { hapticsEnabled, setHapticsEnabled } = useHaptics();
 
 const isGoogleReady = computed(() => isGoogleConfigured());
 

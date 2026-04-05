@@ -1,18 +1,18 @@
 <template>
-  <div class="opponent-hud" v-if="opponent">
+  <div class="opponent-hud" v-if="opponent" :aria-label="$t('accessibility.opponentStatus')" role="status">
     <div class="opponent-info">
       <ion-avatar v-if="opponent.avatarUrl" class="opponent-avatar">
         <img :src="opponent.avatarUrl" :alt="opponent.displayName" />
       </ion-avatar>
-      <ion-icon v-else :icon="personCircleOutline" class="opponent-icon" />
+      <ion-icon v-else :icon="personCircleOutline" class="opponent-icon" :aria-hidden="true" />
       <span class="opponent-name">{{ opponent.displayName }}</span>
     </div>
     <div class="opponent-stats">
-      <div class="stat">
+      <div class="stat" :aria-label="$t('multiplayer.score') + ': ' + score">
         <span class="stat-label">{{ $t('multiplayer.score') }}</span>
         <span class="stat-value">{{ score }}</span>
       </div>
-      <div class="stat" v-if="streak > 0">
+      <div class="stat" v-if="streak > 0" :aria-label="$t('hud.streak') + ': ' + streak">
         <span class="stat-label">{{ $t('hud.streak') }}</span>
         <span class="stat-value">🔥{{ streak }}</span>
       </div>

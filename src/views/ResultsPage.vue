@@ -4,7 +4,7 @@
       <ion-toolbar color="dark">
         <ion-title>{{ $t('results.title') }}</ion-title>
         <ion-buttons slot="end">
-          <ion-button router-link="/home" fill="clear">
+          <ion-button router-link="/home" fill="clear" :aria-label="$t('accessibility.backToHome')">
             <ion-icon slot="icon-only" :icon="homeOutline" />
           </ion-button>
         </ion-buttons>
@@ -129,6 +129,7 @@ import { useUserStore } from '@/store/userStore';
 import { saveGameRecord } from '@/services/storageService';
 import { submitChallengeScore, getChallengeDetails } from '@/services/challengeService';
 import { submitEventScore } from '@/services/eventService';
+import { useHaptics } from '@/composables/useHaptics';
 import type { GameRecord, PlayedQuestion, PowerCardType, PowerCardState, Challenge } from '@/types/game';
 import { comboMultiplierFromStreak } from '@/utils/streak';
 
@@ -136,6 +137,7 @@ const { t } = useI18n();
 const router = useRouter();
 const game = useGameStore();
 const userStore = useUserStore();
+const { success: hapticSuccess } = useHaptics();
 
 const highScoreUpdated = ref(false);
 const themeTop = ref(false);
@@ -279,6 +281,7 @@ onMounted(() => {
     router.replace({ name: 'Home' });
     return;
   }
+  hapticSuccess();
   void persistResult();
 });
 </script>

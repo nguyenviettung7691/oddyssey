@@ -34,6 +34,9 @@ import '@ionic/vue/css/palettes/dark.always.css';
 /* Theme variables */
 import './theme/variables.css';
 
+/* Accessibility */
+import './theme/accessibility.css';
+
 initializeFirebase();
 
 const pinia = createPinia();
